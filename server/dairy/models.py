@@ -1,9 +1,11 @@
 from django.db import models
 
+
 class Customer(models.Model):
     name = models.CharField(max_length=100)
-    mobile = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=15)
     address = models.TextField()
+
 
 class MilkSale(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)

@@ -1,39 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
+import { loginUser } from "../services/api";
 
-const Login: React.FC = () => {
-    const [mobile, setMobile] = useState('');
-    const [password, setPassword] = useState('');
+const LoginPage: React.FC = () => {
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
-    const handleLogin = () => {
-        // Call login API here
-        console.log(mobile, password);
+    const [form, setForm] = useState({ phone_number: "", password: "" });
+    const [error, setError] = useState<string>("");
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+
+        try {
+            const data = await loginUser(form.phone_number, form.password);
+            login(data.token, data.user);
+            navigate("/");
+        } catch (err) {
+            setError("Invalid credentials.");
+        }
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <form
-                className="bg-white p-6 rounded shadow-md w-80"
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleLogin();
-                }}
-            >
-                <h2 className="text-xl font-bold mb-4 text-center">Login</h2>
-                <input
-                    type="text"
-                    placeholder="Mobile Number"
-                    className="input mb-2 w-full border p-2 rounded"
-                    value={mobile}
-                    onChange={(e) => setMobile(e.target.value)}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    className="input mb-4 w-full border p-2 rounded"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
+        <div className="max-w-md mx-auto mt-20 p-4 border rounded">
+            <h2 className="text-2xl font-bold mb-4">Login</h2>
+            {error && <div className="text-danger mb-2">{error}</div>}
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="mb-3">
+                    <label className="form-label" htmlFor="phone_number">Phone Number</label>
+                    <input
+                        id="phone_number"
+                        type="text"
+                        name="phone_number"
+                        placeholder="Phone Number"
+                        value={form.phone_number}
+                        onChange={handleChange}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label className="form-label" htmlFor="password">Password</label>
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={form.password}
+                        onChange={handleChange}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary">
                     Login
                 </button>
             </form>
@@ -41,4 +66,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default LoginPage;

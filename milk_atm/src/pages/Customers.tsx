@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 interface Customer {
     id: number;
     name: string;
-    mobile: string;
+    phone_number: string;
     address: string;
 }
 
 const Customers: React.FC = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [form, setForm] = useState<Omit<Customer, 'id'>>({ name: '', mobile: '', address: '' });
+    const [form, setForm] = useState<Omit<Customer, 'id'>>({ name: '', phone_number: '', address: '' });
 
     const handleAdd = () => {
         const newCustomer: Customer = {
@@ -17,7 +17,7 @@ const Customers: React.FC = () => {
             ...form,
         };
         setCustomers([...customers, newCustomer]);
-        setForm({ name: '', mobile: '', address: '' });
+        setForm({ name: '', phone_number: '', address: '' });
     };
 
     return (
@@ -31,10 +31,10 @@ const Customers: React.FC = () => {
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                 />
                 <input
-                    placeholder="Mobile"
+                    placeholder="Phone Number"
                     className="input border p-2 rounded"
-                    value={form.mobile}
-                    onChange={(e) => setForm({ ...form, mobile: e.target.value })}
+                    value={form.phone_number}
+                    onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
                 />
                 <input
                     placeholder="Address"
@@ -51,7 +51,7 @@ const Customers: React.FC = () => {
                 <thead>
                     <tr className="bg-gray-100">
                         <th className="border px-4 py-2">Name</th>
-                        <th className="border px-4 py-2">Mobile</th>
+                        <th className="border px-4 py-2">Phone Number</th>
                         <th className="border px-4 py-2">Address</th>
                     </tr>
                 </thead>
@@ -59,7 +59,7 @@ const Customers: React.FC = () => {
                     {customers.map((c) => (
                         <tr key={c.id}>
                             <td className="border px-4 py-2">{c.name}</td>
-                            <td className="border px-4 py-2">{c.mobile}</td>
+                            <td className="border px-4 py-2">{c.phone_number}</td>
                             <td className="border px-4 py-2">{c.address}</td>
                         </tr>
                     ))}
