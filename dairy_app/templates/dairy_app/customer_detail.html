@@ -1,0 +1,35 @@
+{% extends 'dairy_app/base.html' %}
+
+{% block content %}
+    <div class="animated fadeIn">
+        <h2>{{ customer.name }}</h2>
+        <p>Phone: {{ customer.phone }}</p>
+        <p>Address: {{ customer.address }}</p>
+
+        <h3 class="mt-4">Sales History</h3>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Quantity</th>
+                    <th>Payment Method</th>
+                    <th>Staff</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                    <tr>
+                        <td>{{ sale.get_quantity_display }}</td>
+                        <td>{{ sale.get_payment_method_display }}</td>
+                        <td>{{ sale.staff.name }}</td>
+                        <td>{{ sale.created_at }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">No sales yet</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

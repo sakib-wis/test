@@ -1,0 +1,35 @@
+{% extends 'dairy_app/base.html' %}
+
+{% block content %}
+    <h2 class="mb-4 animated fadeIn">Sell Milk</h2>
+    <form method="post" class="animated fadeIn">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="customer" class="form-label">Customer</label>
+            <select class="form-select" id="customer" name="customer" required>
+                <option value="">Select Customer</option>
+                {% for customer in customers %}
+                    <option value="{{ customer.id }}">{{ customer.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Milk Quantity</label>
+            <select class="form-select" id="quantity" name="quantity" required>
+                <option value="0.25">250 ml</option>
+                <option value="0.5">500 ml</option>
+                <option value="1">1 Litre</option>
+                <option value="2">2 Litres</option>
+                <option value="3">3 Litres</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="payment_method" class="form-label">Payment Method</label>
+            <select class="form-select" id="payment_method" name="payment_method" required>
+                <option value="cash">Cash</option>
+                <option value="online">Online</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Record Sale</button>
+    </form>
+{% endblock %}
