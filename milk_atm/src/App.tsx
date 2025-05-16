@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Customers from './pages/Customers';
 import Sales from './pages/Sales';
 import ProtectedWrapper from './components/ProtectedWrapper';
+import AddCustomerPage from './pages/Customer/Add';
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<ProtectedWrapper > <Dashboard /> </ProtectedWrapper>} />
             <Route path="/customers" element={<ProtectedWrapper > <Customers /> </ProtectedWrapper>} />
+            <Route path="/customers/add" element={<ProtectedWrapper><AddCustomerPage></AddCustomerPage></ProtectedWrapper>} />
             <Route path="/sales" element={<ProtectedWrapper > <Sales /> </ProtectedWrapper>} />
           </Routes>
         </Layout>

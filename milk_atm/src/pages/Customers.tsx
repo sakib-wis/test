@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-
+import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import $ from 'jquery';
+import 'datatables.net-dt/css/dataTables.dataTables.min.css';
+import 'datatables.net';
 interface Customer {
     id: number;
     name: string;
@@ -10,7 +13,7 @@ interface Customer {
 const Customers: React.FC = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [form, setForm] = useState<Omit<Customer, 'id'>>({ name: '', phone_number: '', address: '' });
-
+    const tableRef = useRef<HTMLTableElement>(null);
     const handleAdd = () => {
         const newCustomer: Customer = {
             id: Date.now(),
@@ -19,52 +22,89 @@ const Customers: React.FC = () => {
         setCustomers([...customers, newCustomer]);
         setForm({ name: '', phone_number: '', address: '' });
     };
+    useEffect(() => {
+        if (tableRef.current) {
+            // Initialize DataTables
+            // const table = $(tableRef.current).DataTable();
 
+            // // Cleanup on unmount
+            // return () => {
+            //     table.destroy(true);
+            // };
+        }
+    }, []);
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">Customers</h1>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <input
-                    placeholder="Name"
-                    className="input border p-2 rounded"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
-                <input
-                    placeholder="Phone Number"
-                    className="input border p-2 rounded"
-                    value={form.phone_number}
-                    onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
-                />
-                <input
-                    placeholder="Address"
-                    className="input border p-2 rounded"
-                    value={form.address}
-                    onChange={(e) => setForm({ ...form, address: e.target.value })}
-                />
+        <div className="container py-4">
+            <div className="row mb-4">
+                <div className="col-12">
+                    <div className="d-flex justify-content-between align-items-center">
+                        <h1 className="h3 mb-0">Customers</h1>
+                        <Link to="/customers/add" className="btn btn-primary">
+                            Add New Customer
+                        </Link>
+                    </div>
+                    <hr />
+                </div>
             </div>
-            <button onClick={handleAdd} className="bg-green-600 text-white py-2 px-4 rounded mb-6">
-                Add Customer
-            </button>
 
-            <table className="w-full border">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border px-4 py-2">Name</th>
-                        <th className="border px-4 py-2">Phone Number</th>
-                        <th className="border px-4 py-2">Address</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {customers.map((c) => (
-                        <tr key={c.id}>
-                            <td className="border px-4 py-2">{c.name}</td>
-                            <td className="border px-4 py-2">{c.phone_number}</td>
-                            <td className="border px-4 py-2">{c.address}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="row">
+                <div className="col-12">
+                    <div className="card border-0 shadow-sm">
+                        <div className="card-body p-0">
+                            <div className="table-responsive">
+                                <table ref={tableRef} className="table table-hover mb-0">
+                                    <thead className="bg-light">
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Phone</th>
+                                            <th scope="col">Address</th>
+                                            <th scope="col">Type</th>
+                                            <th scope="col">Delivery Schedule</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>John Doe</td>
+                                            <td>+1 234-567-8901</td>
+                                            <td>123 Main St, Anytown</td>
+                                            <td>Individual</td>
+                                            <td>Morning (Daily)</td>
+                                            <td>
+                                                <div className="btn-group btn-group-sm">
+                                                    <button type="button" className="btn btn-outline-primary">
+                                                        View
+                                                    </button>
+                                                    <button type="button" className="btn btn-outline-secondary">
+                                                        Edit
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jane Smith</td>
+                                            <td>+1 987-654-3210</td>
+                                            <td>456 Oak Ave, Somewhere</td>
+                                            <td>Business</td>
+                                            <td>Evening (Daily)</td>
+                                            <td>
+                                                <div className="btn-group btn-group-sm">
+                                                    <button type="button" className="btn btn-outline-primary">
+                                                        View
+                                                    </button>
+                                                    <button type="button" className="btn btn-outline-secondary">
+                                                        Edit
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

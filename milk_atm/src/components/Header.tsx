@@ -1,8 +1,8 @@
-// src/components/Header.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import { useAuth } from "../auth/AuthContext";
 const Header: React.FC = () => {
+    const { token, logout } = useAuth();
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
             <div className="container">
@@ -10,7 +10,7 @@ const Header: React.FC = () => {
                 <div className="collapse navbar-collapse">
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/">Dashboard</Link>
+                            <Link className="nav-link active" to="/">Dashboard</Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/customers">Customers</Link>
@@ -19,7 +19,7 @@ const Header: React.FC = () => {
                             <Link className="nav-link" to="/sales">Sales</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/login">Login</Link>
+                            {token ? <button className="nav-link" onClick={logout}>Logout</button> : <Link className="nav-link" to="/login">Login</Link>}
                         </li>
                     </ul>
                 </div>

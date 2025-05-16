@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -23,6 +21,7 @@ class LoginView(APIView):
                 'user': {
                     'id': user.id,
                     'phone_number': user.phone_number,
+                    'full_name': user.full_name
                 }
             })
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -35,5 +34,6 @@ class UserView(APIView):
             return Response({
                 'id': user.id,
                 'phone_number': user.phone_number,
+                'full_name': user.full_name
             })
         return Response({'error': 'User not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)

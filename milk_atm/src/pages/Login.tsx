@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
 
         try {
             const data = await loginUser(form.phone_number, form.password);
-            login(data.token, data.user);
+            login(data.access, data.user);
             navigate("/");
         } catch (err) {
             setError("Invalid credentials.");
