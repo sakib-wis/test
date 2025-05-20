@@ -25,16 +25,24 @@ export const loginUser = async (phone_number: string, password: string) => {
 
 // Add more APIs here:
 export const fetchUserData = async () => {
-  const response = await api.get("/account/user"); // example
+  const response = await api.get("/account/user/"); // example
   return response.data;
 };
 // Add more APIs here:
 export const fetchCustomers = async () => {
-  const response = await api.get("/dairy/customers"); // example
+  const response = await api.get("/dairy/customers/"); // example
   return response.data;
 };
-export const createCustomers = async () => {
-  const response = await api.post("/dairy/add_customer"); // example
+export const createCustomers = async (payload: any) => {
+  const response = await api.post("/dairy/add_customer/", payload); // example
+  return response.data;
+};
+export const fetchStates = async () => {
+  const response = await api.get("/dairy/states/"); // example
+  return response.data;
+};
+export const fetchCities = async () => {
+  const response = await api.post("/dairy/cities/"); // example
   return response.data;
 };
 

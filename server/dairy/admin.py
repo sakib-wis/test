@@ -36,3 +36,20 @@ class CitiesAdmin(admin.ModelAdmin):
     )
     list_filter = ('start_date', 'end_date')
     search_fields = ('value',)
+
+
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        exclude = ['end_date', 'start_date', 'enc_id']
+
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    form = CustomerForm
+    list_display = (
+        'enc_id',
+        'first_name'
+    )
+    list_filter = ('start_date', 'end_date')
+    search_fields = ('first_name',)

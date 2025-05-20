@@ -1,30 +1,38 @@
 
 
 import type React from "react"
-
-import { useState } from "react"
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from "react"
+import { Link, useNavigate } from 'react-router-dom'
+import { createCustomers, fetchCities, fetchStates } from "../../services/api"
 
 export default function AddCustomerPage() {
+    const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
         phone: "",
-        email: "",
         streetAddress: "",
-        city: "",
-        state: "",
-        zipCode: "",
+        state_id: 1,
+        city_id: 1,
         customerType: "individual",
         paymentMethod: "cash",
         deliverySchedule: "morning",
         deliveryFrequency: "daily",
         notes: "",
     })
-
+    const [states, setStates] = useState([])
+    const [cities, setCities] = useState([])
     const [errors, setErrors] = useState<Record<string, string>>({})
 
+    useEffect(() => {
+        fetchStates().then(async res => {
+            setStates(await res);
+        })
+        fetchCities().then(async res => {
+            setCities(await res)
+        })
+    }, [])
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData((prev) => ({
@@ -49,16 +57,10 @@ export default function AddCustomerPage() {
         if (!formData.lastName.trim()) newErrors.lastName = "Last name is required"
         if (!formData.phone.trim()) newErrors.phone = "Phone number is required"
 
-        // Email validation
-        if (formData.email && !/^\S+@\S+\.\S+$/.test(formData.email)) {
-            newErrors.email = "Please enter a valid email address"
-        }
-
         // Address validation
         if (!formData.streetAddress.trim()) newErrors.streetAddress = "Street address is required"
-        if (!formData.city.trim()) newErrors.city = "City is required"
-        if (!formData.state.trim()) newErrors.state = "State is required"
-        if (!formData.zipCode.trim()) newErrors.zipCode = "ZIP code is required"
+        if (!formData.city_id) newErrors.city_id = "City is required"
+        if (!formData.state_id) newErrors.state_id = "State is required"
 
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
@@ -73,15 +75,10 @@ export default function AddCustomerPage() {
 
         try {
             // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000))
-
-            console.log("Customer data submitted:", formData)
-
-            // Show success message
-            alert("Customer added successfully!")
-
+            const res = await createCustomers(formData)
+            console.log("Repose", res)            
             // Redirect to customers list
-            // router.push("/customers")
+            navigate("/customers")
         } catch (error) {
             console.error("Error adding customer:", error)
             alert("Failed to add customer. Please try again.")
@@ -125,7 +122,7 @@ export default function AddCustomerPage() {
                                             name="firstName"
                                             value={formData.firstName}
                                             onChange={handleChange}
-                                            required
+                                            required placeholder="Enter Value"
                                         />
                                         {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
                                     </div>
@@ -141,7 +138,7 @@ export default function AddCustomerPage() {
                                             name="lastName"
                                             value={formData.lastName}
                                             onChange={handleChange}
-                                            required
+                                            required placeholder="Enter Value"
                                         />
                                         {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
                                     </div>
@@ -157,24 +154,9 @@ export default function AddCustomerPage() {
                                             name="phone"
                                             value={formData.phone}
                                             onChange={handleChange}
-                                            required
+                                            required placeholder="Enter Value"
                                         />
                                         {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
-                                    </div>
-
-                                    <div className="col-md-6 mb-3">
-                                        <label htmlFor="email" className="form-label">
-                                            Email Address
-                                        </label>
-                                        <input
-                                            type="email"
-                                            className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                                            id="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                        />
-                                        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                                     </div>
                                 </div>
 
@@ -194,57 +176,36 @@ export default function AddCustomerPage() {
                                             name="streetAddress"
                                             value={formData.streetAddress}
                                             onChange={handleChange}
-                                            required
+                                            required placeholder="Enter Value"
                                         />
                                         {errors.streetAddress && <div className="invalid-feedback">{errors.streetAddress}</div>}
+                                    </div>
+
+
+                                    <div className="col-md-4 mb-3">
+                                        <label htmlFor="state" className="form-label">
+                                            State *
+                                        </label>
+                                        <select name="state" id="state" className={`form-control ${errors.state ? "is-invalid" : ""}`} value={formData.state_id}
+                                            onChange={handleChange}
+                                            required>
+                                            {states && states.map(ele => <option value={ele.id} key={ele.id}>{ele.value}</option>
+                                            )}
+                                        </select>
+                                        {errors.state_id && <div className="invalid-feedback">{errors.state_id}</div>}
                                     </div>
 
                                     <div className="col-md-5 mb-3">
                                         <label htmlFor="city" className="form-label">
                                             City *
                                         </label>
-                                        <input
-                                            type="text"
-                                            className={`form-control ${errors.city ? "is-invalid" : ""}`}
-                                            id="city"
-                                            name="city"
-                                            value={formData.city}
+                                        <select name="city" id="city" className={`form-control ${errors.city ? "is-invalid" : ""}`} value={formData.city_id}
                                             onChange={handleChange}
-                                            required
-                                        />
-                                        {errors.city && <div className="invalid-feedback">{errors.city}</div>}
-                                    </div>
-
-                                    <div className="col-md-4 mb-3">
-                                        <label htmlFor="state" className="form-label">
-                                            State *
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className={`form-control ${errors.state ? "is-invalid" : ""}`}
-                                            id="state"
-                                            name="state"
-                                            value={formData.state}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                        {errors.state && <div className="invalid-feedback">{errors.state}</div>}
-                                    </div>
-
-                                    <div className="col-md-3 mb-3">
-                                        <label htmlFor="zipCode" className="form-label">
-                                            ZIP Code *
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className={`form-control ${errors.zipCode ? "is-invalid" : ""}`}
-                                            id="zipCode"
-                                            name="zipCode"
-                                            value={formData.zipCode}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                        {errors.zipCode && <div className="invalid-feedback">{errors.zipCode}</div>}
+                                            required>
+                                            {cities && cities.map(ele => <option value={ele.id} key={ele.id}>{ele.value}</option>
+                                            )}
+                                        </select>
+                                        {errors.city_id && <div className="invalid-feedback">{errors.city_id}</div>}
                                     </div>
                                 </div>
 

@@ -6,31 +6,31 @@ import 'datatables.net';
 import { fetchCustomers } from '../services/api';
 interface Customer {
     id: number;
-    name: string;
-    phone_number: string;
-    address: string;
+    enc_id: string | null;
+    first_name: string | null;
+    last_name: string | null;
+    phone_number: string | null;
+    address: string | null;
+    customer_type: string | null;
+    preferred_payment_method: string | null;
+    delivery_schedule: string | null;
+    delivery_frequency: string | null;
+    additional_notes: string | null;
+    city: number | null;
+    state: number | null;
 }
 
 const Customers: React.FC = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [form, setForm] = useState<Omit<Customer, 'id'>>({ name: '', phone_number: '', address: '' });
     const tableRef = useRef<HTMLTableElement>(null);
-    const handleAdd = () => {
-        const newCustomer: Customer = {
-            id: Date.now(),
-            ...form,
-        };
-        setCustomers([...customers, newCustomer]);
-        setForm({ name: '', phone_number: '', address: '' });
-    };
     useEffect(() => {
         // fetch customers
         fetchCustomers().then(async res => {
-            console.log("res:", res.data)
+            setCustomers(res)
         })
         if (tableRef.current) {
             // Initialize DataTables
-            const table = $(tableRef.current).DataTable();
+            $(tableRef.current).DataTable();
 
             // // Cleanup on unmount
             // return () => {
@@ -69,12 +69,12 @@ const Customers: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>John Doe</td>
-                                            <td>+1 234-567-8901</td>
-                                            <td>123 Main St, Anytown</td>
-                                            <td>Individual</td>
-                                            <td>Morning (Daily)</td>
+                                        {customers && customers.map(ele => <tr key={ele.id}>
+                                            <td>{ele.first_name} {ele.last_name}</td>
+                                            <td>{ele.phone_number}</td>
+                                            <td>{ele.address}</td>
+                                            <td>{ele.customer_type}</td>
+                                            <td>{ele.delivery_schedule}</td>
                                             <td>
                                                 <div className="btn-group btn-group-sm">
                                                     <button type="button" className="btn btn-outline-primary">
@@ -85,24 +85,7 @@ const Customers: React.FC = () => {
                                                     </button>
                                                 </div>
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jane Smith</td>
-                                            <td>+1 987-654-3210</td>
-                                            <td>456 Oak Ave, Somewhere</td>
-                                            <td>Business</td>
-                                            <td>Evening (Daily)</td>
-                                            <td>
-                                                <div className="btn-group btn-group-sm">
-                                                    <button type="button" className="btn btn-outline-primary">
-                                                        View
-                                                    </button>
-                                                    <button type="button" className="btn btn-outline-secondary">
-                                                        Edit
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        </tr>)}
                                     </tbody>
                                 </table>
                             </div>
