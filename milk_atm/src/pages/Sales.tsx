@@ -1,83 +1,84 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import $ from 'jquery';
+import 'datatables.net';
+import { useNavigate } from 'react-router-dom';
+import { fetchSales } from '../services/api';
+import type { CustomerInterface } from './Sales/Sale';
 
-interface Sale {
+export interface SaleInterface {
     id: number;
-    customer: string;
+    customer: CustomerInterface;
     quantity: number;
     price: number;
     date: string;
 }
 
 const Sales: React.FC = () => {
-    const [sales, setSales] = useState<Sale[]>([]);
-    const [form, setForm] = useState<Omit<Sale, 'id'>>({ customer: '', quantity: 0, price: 0, date: '' });
+    const navigate = useNavigate();
+    const tableRef = useRef<HTMLTableElement>(null);
+    const [sales, setSales] = useState<SaleInterface[]>([]);
+    const tableInitialized = useRef<boolean>(false); // prevent multiple initializations
 
-    const handleAddSale = () => {
-        const newSale: Sale = {
-            id: Date.now(),
-            ...form,
+    // Fetch data on mount
+    useEffect(() => {
+        fetchSales().then(res => {
+            setSales(res);
+        });
+    }, []);
+
+    // Initialize DataTable after sales data is loaded
+    useEffect(() => {
+        if (sales.length > 0 && tableRef.current && !tableInitialized.current) {
+            $(tableRef.current).DataTable();
+            tableInitialized.current = true;
+        }
+
+        return () => {
+            // Cleanup on unmount
+            if (tableRef.current && $.fn.dataTable.isDataTable(tableRef.current)) {
+                // $(tableRef.current).DataTable().destroy(true);
+                // tableInitialized.current = false;
+            }
         };
-        setSales([...sales, newSale]);
-        setForm({ customer: '', quantity: 0, price: 0, date: '' });
-    };
+    }, [sales]);
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">Milk Sales</h1>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <input
-                    placeholder="Customer Name"
-                    className="border p-2 rounded"
-                    value={form.customer}
-                    onChange={(e) => setForm({ ...form, customer: e.target.value })}
-                />
-                <input
-                    type="number"
-                    placeholder="Quantity (L)"
-                    className="border p-2 rounded"
-                    value={form.quantity}
-                    onChange={(e) => setForm({ ...form, quantity: Number(e.target.value) })}
-                />
-                <input
-                    type="number"
-                    placeholder="Price per Liter (₹)"
-                    className="border p-2 rounded"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
-                />
-                <input
-                    type="date"
-                    className="border p-2 rounded"
-                    value={form.date}
-                    onChange={(e) => setForm({ ...form, date: e.target.value })}
-                />
+            <div className="d-flex justify-content-between">
+                <div>
+                    <h1 className="text-2xl font-bold mb-4">Milk Sales</h1>
+                </div>
+                <div>
+                    <p>{new Date().toLocaleString()}</p>
+                    <button onClick={() => navigate('/sales/sale')} className="btn btn-primary float-end">
+                        Add Sale
+                    </button>
+                </div>
             </div>
-            <button onClick={handleAddSale} className="bg-blue-600 text-white py-2 px-4 rounded mb-6">
-                Add Sale
-            </button>
-
-            <table className="w-full border">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border px-4 py-2">Customer</th>
-                        <th className="border px-4 py-2">Qty (L)</th>
-                        <th className="border px-4 py-2">Rate</th>
-                        <th className="border px-4 py-2">Total</th>
-                        <th className="border px-4 py-2">Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {sales.map((s) => (
-                        <tr key={s.id}>
-                            <td className="border px-4 py-2">{s.customer}</td>
-                            <td className="border px-4 py-2">{s.quantity}</td>
-                            <td className="border px-4 py-2">{s.price}</td>
-                            <td className="border px-4 py-2">{s.quantity * s.price}</td>
-                            <td className="border px-4 py-2">{s.date}</td>
+            <div className='table-wrapper mt-5'>
+                <table className="w-full border display" ref={tableRef}>
+                    <thead>
+                        <tr className="bg-gray-100">
+                            <th className="border px-4 py-2">Customer</th>
+                            <th className="border px-4 py-2">Qty (L)</th>
+                            <th className="border px-4 py-2">Rate</th>
+                            <th className="border px-4 py-2">Total</th>
+                            <th className="border px-4 py-2">Date</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {sales.map((s) => (
+                            <tr key={s.id}>
+                                <td className="border px-4 py-2">{s.customer.first_name} {s.customer.last_name}</td>
+                                <td className="border px-4 py-2">{s.quantity}</td>
+                                <td className="border px-4 py-2">{s.price}</td>
+                                <td className="border px-4 py-2">{s.quantity * s.price}</td>
+                                <td className="border px-4 py-2">{s.date}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

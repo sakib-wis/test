@@ -64,8 +64,8 @@ class Customer(BaseModel):
 
 class MilkSale(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    quantity_ltr = models.FloatField()
-    price_per_ltr = models.DecimalField(max_digits=6, decimal_places=2)
+    quantity = models.FloatField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
     date = models.DateField(auto_now_add=True)
 
     class Meta:

@@ -33,8 +33,16 @@ export const fetchCustomers = async () => {
   const response = await api.get("/dairy/customers/"); // example
   return response.data;
 };
+export const fetchCustomer = async (enc_id: any) => {
+  const response = await api.get("/dairy/customers/" + enc_id); // example
+  return response.data;
+};
 export const createCustomers = async (payload: any) => {
   const response = await api.post("/dairy/add_customer/", payload); // example
+  return response.data;
+};
+export const editCustomers = async (enc_id, payload: any) => {
+  const response = await api.patch("/dairy/edit_customer/" + enc_id, payload); // example
   return response.data;
 };
 export const fetchStates = async () => {
@@ -43,6 +51,14 @@ export const fetchStates = async () => {
 };
 export const fetchCities = async () => {
   const response = await api.post("/dairy/cities/"); // example
+  return response.data;
+};
+export const fetchSales = async () => {
+  const response = await api.get("/dairy/milk-sales/"); // example
+  return response.data;
+};
+export const milkSold = async (payload: any) => {
+  const response = await api.post("/dairy/milk-sale/", payload); // example
   return response.data;
 };
 

@@ -1,43 +1,39 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import $ from 'jquery';
 import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import 'datatables.net';
 import { fetchCustomers } from '../services/api';
-interface Customer {
-    id: number;
-    enc_id: string | null;
-    first_name: string | null;
-    last_name: string | null;
-    phone_number: string | null;
-    address: string | null;
-    customer_type: string | null;
-    preferred_payment_method: string | null;
-    delivery_schedule: string | null;
-    delivery_frequency: string | null;
-    additional_notes: string | null;
-    city: number | null;
-    state: number | null;
-}
+import type { CustomerInterface } from './Sales/Sale';
 
 const Customers: React.FC = () => {
-    const [customers, setCustomers] = useState<Customer[]>([]);
+    const navigate = useNavigate();
+    const [customers, setCustomers] = useState<CustomerInterface[]>([]);
     const tableRef = useRef<HTMLTableElement>(null);
-    useEffect(() => {
-        // fetch customers
-        fetchCustomers().then(async res => {
-            setCustomers(res)
-        })
-        if (tableRef.current) {
-            // Initialize DataTables
-            $(tableRef.current).DataTable();
+    const tableInitialized = useRef<boolean>(false);
 
-            // // Cleanup on unmount
-            // return () => {
-            //     table.destroy(true);
-            // };
-        }
+    // Fetch customer data
+    useEffect(() => {
+        fetchCustomers().then(res => {
+            setCustomers(res);
+        });
     }, []);
+
+    // Initialize DataTables after data is loaded
+    useEffect(() => {
+        if (customers.length > 0 && tableRef.current && !tableInitialized.current) {
+            $(tableRef.current).DataTable();
+            tableInitialized.current = true;
+        }
+
+        return () => {
+            if (tableRef.current && $.fn.dataTable.isDataTable(tableRef.current)) {
+                // $(tableRef.current).DataTable().destroy(true);
+                // tableInitialized.current = false;
+            }
+        };
+    }, [customers]);
+
     return (
         <div className="container py-4">
             <div className="row mb-4">
@@ -69,23 +65,25 @@ const Customers: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {customers && customers.map(ele => <tr key={ele.id}>
-                                            <td>{ele.first_name} {ele.last_name}</td>
-                                            <td>{ele.phone_number}</td>
-                                            <td>{ele.address}</td>
-                                            <td>{ele.customer_type}</td>
-                                            <td>{ele.delivery_schedule}</td>
-                                            <td>
-                                                <div className="btn-group btn-group-sm">
-                                                    <button type="button" className="btn btn-outline-primary">
-                                                        View
-                                                    </button>
-                                                    <button type="button" className="btn btn-outline-secondary">
-                                                        Edit
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>)}
+                                        {customers.map(ele => (
+                                            <tr key={ele.id}>
+                                                <td>{ele.first_name} {ele.last_name}</td>
+                                                <td>{ele.phone_number}</td>
+                                                <td>{ele.address}</td>
+                                                <td>{ele.customer_type}</td>
+                                                <td>{ele.delivery_schedule}</td>
+                                                <td>
+                                                    <div className="btn-group btn-group-sm">
+                                                        <button onClick={() => navigate('/customers/' + ele.enc_id)} className="btn btn-outline-primary">
+                                                            View
+                                                        </button>
+                                                        <button className="btn btn-outline-secondary" onClick={() => navigate('/customers/edit/' + ele.enc_id)}>
+                                                            Edit
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>

@@ -5,7 +5,7 @@ from .models import *
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        exclude = ['id', 'enc_id']
+        fields = '__all__'
 
 
 class AddCustomerSerializer(serializers.ModelSerializer):
@@ -14,19 +14,27 @@ class AddCustomerSerializer(serializers.ModelSerializer):
         exclude = ['id', 'enc_id']
 
 
+class GetMilkSaleSerializer(serializers.ModelSerializer):
+    customer = CustomerSerializer()
+
+    class Meta:
+        model = MilkSale
+        fields = '__all__'
+
+
 class MilkSaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = MilkSale
-        exclude = ['id', 'enc_id']
+        fields = '__all__'
 
 
 class StatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = States
-        exclude = ['id', 'enc_id']
+        fields = '__all__'
 
 
 class CitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cities
-        exclude = ['id', 'enc_id']
+        fields = '__all__'
