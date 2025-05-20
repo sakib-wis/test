@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import $ from 'jquery';
 import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import 'datatables.net';
+import { fetchCustomers } from '../services/api';
 interface Customer {
     id: number;
     name: string;
@@ -23,9 +24,13 @@ const Customers: React.FC = () => {
         setForm({ name: '', phone_number: '', address: '' });
     };
     useEffect(() => {
+        // fetch customers
+        fetchCustomers().then(async res => {
+            console.log("res:", res.data)
+        })
         if (tableRef.current) {
             // Initialize DataTables
-            // const table = $(tableRef.current).DataTable();
+            const table = $(tableRef.current).DataTable();
 
             // // Cleanup on unmount
             // return () => {

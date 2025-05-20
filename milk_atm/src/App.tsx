@@ -12,8 +12,8 @@ import AddCustomerPage from './pages/Customer/Add';
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Layout>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -23,8 +23,8 @@ const App: React.FC = () => {
             <Route path="/sales" element={<ProtectedWrapper > <Sales /> </ProtectedWrapper>} />
           </Routes>
         </Layout>
-      </Router >
-    </AuthProvider>
+      </AuthProvider>
+    </Router >
   );
 };
 

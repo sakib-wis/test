@@ -1,9 +1,17 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+    createContext,
+    useContext,
+    useState,
+    ReactNode,
+    useEffect,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 interface User {
     id: number;
     phone_number: string;
-    full_name: string | null
+    full_name: string | null;
 }
 
 interface AuthContextType {
@@ -15,8 +23,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
+type JWTPayload = {
+    exp: number; // expiration time, in seconds since epoch
+    // ...any other claims you might have
+};
+
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+    children,
+}) => {
+    const navigate = useNavigate();
+    const [token, setToken] = useState<string | null>(
+        localStorage.getItem("token")
+    );
     const [user, setUser] = useState<User | null>(
         localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null
     );
@@ -33,7 +51,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUser(null);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+        navigate("/login", { replace: true });
     };
+
+    // helper to check expiry
+    const isTokenExpired = (token: string) => {
+        try {
+            const { exp } = jwtDecode<JWTPayload>(token);
+            // exp is in seconds; Date.now() is milliseconds
+            return Date.now() >= exp * 1000;
+        } catch (e) {
+            // invalid token
+            return true;
+        }
+    };
+
+    // on mount & whenever token changes, verify it
+    useEffect(() => {
+        if (token) {
+            if (isTokenExpired(token)) {
+                // token expired: clear out and redirect
+                logout();
+            }
+        }
+    }, [token]);
 
     return (
         <AuthContext.Provider value={{ token, user, login, logout }}>

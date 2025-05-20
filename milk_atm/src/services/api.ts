@@ -11,7 +11,7 @@ const api = axios.create({
 // Automatically attach token if available
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (token && token != undefined && token != 'undefined' && config.headers) {
+  if (token && token != undefined && token != "undefined" && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
@@ -26,6 +26,15 @@ export const loginUser = async (phone_number: string, password: string) => {
 // Add more APIs here:
 export const fetchUserData = async () => {
   const response = await api.get("/account/user"); // example
+  return response.data;
+};
+// Add more APIs here:
+export const fetchCustomers = async () => {
+  const response = await api.get("/dairy/customers"); // example
+  return response.data;
+};
+export const createCustomers = async () => {
+  const response = await api.post("/dairy/add_customer"); // example
   return response.data;
 };
 
