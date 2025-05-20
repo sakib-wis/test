@@ -9,17 +9,17 @@ export default function AddCustomerPage() {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
-        phone: "",
-        streetAddress: "",
+        first_name: "",
+        last_name: "",
+        phone_number: "",
+        address: "",
         state_id: 1,
         city_id: 1,
-        customerType: "individual",
-        paymentMethod: "cash",
-        deliverySchedule: "morning",
-        deliveryFrequency: "daily",
-        notes: "",
+        customer_type: "individual",
+        preferred_payment_method: "cash",
+        delivery_schedule: "morning",
+        delivery_frequency: "daily",
+        additional_notes: "",
     })
     const [states, setStates] = useState([])
     const [cities, setCities] = useState([])
@@ -53,12 +53,12 @@ export default function AddCustomerPage() {
     const validateForm = () => {
         const newErrors: Record<string, string> = {}
 
-        if (!formData.firstName.trim()) newErrors.firstName = "First name is required"
-        if (!formData.lastName.trim()) newErrors.lastName = "Last name is required"
-        if (!formData.phone.trim()) newErrors.phone = "Phone number is required"
+        if (!formData.first_name.trim()) newErrors.first_name = "First name is required"
+        if (!formData.last_name.trim()) newErrors.last_name = "Last name is required"
+        if (!formData.phone_number.trim()) newErrors.phone_number = "Phone number is required"
 
         // Address validation
-        if (!formData.streetAddress.trim()) newErrors.streetAddress = "Street address is required"
+        if (!formData.address.trim()) newErrors.address = "Street address is required"
         if (!formData.city_id) newErrors.city_id = "City is required"
         if (!formData.state_id) newErrors.state_id = "State is required"
 
@@ -76,7 +76,7 @@ export default function AddCustomerPage() {
         try {
             // Simulate API call
             const res = await createCustomers(formData)
-            console.log("Repose", res)            
+            console.log("Repose", res)
             // Redirect to customers list
             navigate("/customers")
         } catch (error) {
@@ -112,51 +112,51 @@ export default function AddCustomerPage() {
                                     </div>
 
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="firstName" className="form-label">
+                                        <label htmlFor="first_name" className="form-label">
                                             First Name *
                                         </label>
                                         <input
                                             type="text"
-                                            className={`form-control ${errors.firstName ? "is-invalid" : ""}`}
-                                            id="firstName"
-                                            name="firstName"
-                                            value={formData.firstName}
+                                            className={`form-control ${errors.first_name ? "is-invalid" : ""}`}
+                                            id="first_name"
+                                            name="first_name"
+                                            value={formData.first_name}
                                             onChange={handleChange}
                                             required placeholder="Enter Value"
                                         />
-                                        {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
+                                        {errors.first_name && <div className="invalid-feedback">{errors.first_name}</div>}
                                     </div>
 
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="lastName" className="form-label">
+                                        <label htmlFor="last_name" className="form-label">
                                             Last Name *
                                         </label>
                                         <input
                                             type="text"
-                                            className={`form-control ${errors.lastName ? "is-invalid" : ""}`}
-                                            id="lastName"
-                                            name="lastName"
-                                            value={formData.lastName}
+                                            className={`form-control ${errors.last_name ? "is-invalid" : ""}`}
+                                            id="last_name"
+                                            name="last_name"
+                                            value={formData.last_name}
                                             onChange={handleChange}
                                             required placeholder="Enter Value"
                                         />
-                                        {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
+                                        {errors.last_name && <div className="invalid-feedback">{errors.last_name}</div>}
                                     </div>
 
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="phone" className="form-label">
+                                        <label htmlFor="phone_number" className="form-label">
                                             Phone Number *
                                         </label>
                                         <input
                                             type="tel"
-                                            className={`form-control ${errors.phone ? "is-invalid" : ""}`}
-                                            id="phone"
-                                            name="phone"
-                                            value={formData.phone}
+                                            className={`form-control ${errors.phone_number ? "is-invalid" : ""}`}
+                                            id="phone_number"
+                                            name="phone_number"
+                                            value={formData.phone_number}
                                             onChange={handleChange}
                                             required placeholder="Enter Value"
                                         />
-                                        {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
+                                        {errors.phone_number && <div className="invalid-feedback">{errors.phone_number}</div>}
                                     </div>
                                 </div>
 
@@ -166,19 +166,19 @@ export default function AddCustomerPage() {
                                     </div>
 
                                     <div className="col-12 mb-3">
-                                        <label htmlFor="streetAddress" className="form-label">
+                                        <label htmlFor="address" className="form-label">
                                             Street Address *
                                         </label>
                                         <input
                                             type="text"
-                                            className={`form-control ${errors.streetAddress ? "is-invalid" : ""}`}
-                                            id="streetAddress"
-                                            name="streetAddress"
-                                            value={formData.streetAddress}
+                                            className={`form-control ${errors.address ? "is-invalid" : ""}`}
+                                            id="address"
+                                            name="address"
+                                            value={formData.address}
                                             onChange={handleChange}
                                             required placeholder="Enter Value"
                                         />
-                                        {errors.streetAddress && <div className="invalid-feedback">{errors.streetAddress}</div>}
+                                        {errors.address && <div className="invalid-feedback">{errors.address}</div>}
                                     </div>
 
 
@@ -215,14 +215,14 @@ export default function AddCustomerPage() {
                                     </div>
 
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="customerType" className="form-label">
+                                        <label htmlFor="customer_type" className="form-label">
                                             Customer Type
                                         </label>
                                         <select
                                             className="form-select"
-                                            id="customerType"
-                                            name="customerType"
-                                            value={formData.customerType}
+                                            id="customer_type"
+                                            name="customer_type"
+                                            value={formData.customer_type}
                                             onChange={handleChange}
                                         >
                                             <option value="individual">Individual</option>
@@ -232,14 +232,14 @@ export default function AddCustomerPage() {
                                     </div>
 
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="paymentMethod" className="form-label">
+                                        <label htmlFor="preferred_payment_method" className="form-label">
                                             Preferred Payment Method
                                         </label>
                                         <select
                                             className="form-select"
-                                            id="paymentMethod"
-                                            name="paymentMethod"
-                                            value={formData.paymentMethod}
+                                            id="preferred_payment_method"
+                                            name="preferred_payment_method"
+                                            value={formData.preferred_payment_method}
                                             onChange={handleChange}
                                         >
                                             <option value="cash">Cash</option>
@@ -250,14 +250,14 @@ export default function AddCustomerPage() {
                                     </div>
 
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="deliverySchedule" className="form-label">
+                                        <label htmlFor="delivery_schedule" className="form-label">
                                             Delivery Schedule
                                         </label>
                                         <select
                                             className="form-select"
-                                            id="deliverySchedule"
-                                            name="deliverySchedule"
-                                            value={formData.deliverySchedule}
+                                            id="delivery_schedule"
+                                            name="delivery_schedule"
+                                            value={formData.delivery_schedule}
                                             onChange={handleChange}
                                         >
                                             <option value="morning">Morning (6AM - 9AM)</option>
@@ -267,14 +267,14 @@ export default function AddCustomerPage() {
                                     </div>
 
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="deliveryFrequency" className="form-label">
+                                        <label htmlFor="delivery_frequency" className="form-label">
                                             Delivery Frequency
                                         </label>
                                         <select
                                             className="form-select"
-                                            id="deliveryFrequency"
-                                            name="deliveryFrequency"
-                                            value={formData.deliveryFrequency}
+                                            id="delivery_frequency"
+                                            name="delivery_frequency"
+                                            value={formData.delivery_frequency}
                                             onChange={handleChange}
                                         >
                                             <option value="daily">Daily</option>
@@ -284,15 +284,15 @@ export default function AddCustomerPage() {
                                     </div>
 
                                     <div className="col-12 mb-3">
-                                        <label htmlFor="notes" className="form-label">
+                                        <label htmlFor="additional_notes" className="form-label">
                                             Additional Notes
                                         </label>
                                         <textarea
                                             className="form-control"
-                                            id="notes"
-                                            name="notes"
+                                            id="additional_notes"
+                                            name="additional_notes"
                                             rows={3}
-                                            value={formData.notes}
+                                            value={formData.additional_notes}
                                             onChange={handleChange}
                                             placeholder="Any special instructions or additional information..."
                                         ></textarea>

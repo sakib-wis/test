@@ -56,11 +56,9 @@ class CitiesView(generics.ListCreateAPIView):
 class AddCustomer(APIView):
     def post(self, request):
         serializer = AddCustomerSerializer(data=request.data)
-        print(">>request.data", request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(">>>Ser", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
