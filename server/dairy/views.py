@@ -64,7 +64,7 @@ class AddCustomer(APIView):
 
 
 class EditCustomer(APIView):
-    def post(self, request, enc_id):
+    def patch(self, request, enc_id):
         customer = get_object_or_404(Customer, enc_id=enc_id)
         serializer = AddCustomerSerializer(
             data=request.data, instance=customer)

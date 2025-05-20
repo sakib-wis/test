@@ -42,7 +42,10 @@ export const createCustomers = async (payload: any) => {
   return response.data;
 };
 export const editCustomers = async (enc_id, payload: any) => {
-  const response = await api.patch("/dairy/edit_customer/" + enc_id, payload); // example
+  const response = await api.patch(
+    "/dairy/edit_customer/" + enc_id + "/",
+    payload
+  ); // example
   return response.data;
 };
 export const fetchStates = async () => {
