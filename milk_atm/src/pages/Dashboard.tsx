@@ -7,7 +7,6 @@ import {
     TrendingUp,
     Users,
     CreditCard,
-    Banknote,
 } from "lucide-react"
 import {
     Area,

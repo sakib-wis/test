@@ -1,37 +1,39 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import $ from 'jquery';
 import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import 'datatables.net';
-interface Customer {
-    id: number;
-    name: string;
-    phone_number: string;
-    address: string;
-}
+import { fetchCustomers } from '../services/api';
+import type { CustomerInterface } from './Sales/Sale';
 
 const Customers: React.FC = () => {
-    const [customers, setCustomers] = useState<Customer[]>([]);
-    const [form, setForm] = useState<Omit<Customer, 'id'>>({ name: '', phone_number: '', address: '' });
+    const navigate = useNavigate();
+    const [customers, setCustomers] = useState<CustomerInterface[]>([]);
     const tableRef = useRef<HTMLTableElement>(null);
-    const handleAdd = () => {
-        const newCustomer: Customer = {
-            id: Date.now(),
-            ...form,
-        };
-        setCustomers([...customers, newCustomer]);
-        setForm({ name: '', phone_number: '', address: '' });
-    };
+    const tableInitialized = useRef<boolean>(false);
+
+    // Fetch customer data
     useEffect(() => {
-        if (tableRef.current) {            
-            // Initialize DataTables
-            const table = $(tableRef.current).DataTable();
-            // Cleanup on unmount
-            return () => {
-                // table.destroy(true);
-            };
-        }
+        fetchCustomers().then(res => {
+            setCustomers(res);
+        });
     }, []);
+
+    // Initialize DataTables after data is loaded
+    useEffect(() => {
+        if (customers.length > 0 && tableRef.current && !tableInitialized.current) {
+            $(tableRef.current).DataTable();
+            tableInitialized.current = true;
+        }
+
+        return () => {
+            if (tableRef.current && $.fn.dataTable.isDataTable(tableRef.current)) {
+                // $(tableRef.current).DataTable().destroy(true);
+                // tableInitialized.current = false;
+            }
+        };
+    }, [customers]);
+
     return (
         <div className="container py-4">
             <div className="row mb-4">
@@ -63,40 +65,25 @@ const Customers: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>John Doe</td>
-                                            <td>+1 234-567-8901</td>
-                                            <td>123 Main St, Anytown</td>
-                                            <td>Individual</td>
-                                            <td>Morning (Daily)</td>
-                                            <td>
-                                                <div className="btn-group btn-group-sm">
-                                                    <button type="button" className="btn btn-outline-primary">
-                                                        View
-                                                    </button>
-                                                    <button type="button" className="btn btn-outline-secondary">
-                                                        Edit
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jane Smith</td>
-                                            <td>+1 987-654-3210</td>
-                                            <td>456 Oak Ave, Somewhere</td>
-                                            <td>Business</td>
-                                            <td>Evening (Daily)</td>
-                                            <td>
-                                                <div className="btn-group btn-group-sm">
-                                                    <button type="button" className="btn btn-outline-primary">
-                                                        View
-                                                    </button>
-                                                    <button type="button" className="btn btn-outline-secondary">
-                                                        Edit
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        {customers.map(ele => (
+                                            <tr key={ele.id}>
+                                                <td>{ele.first_name} {ele.last_name}</td>
+                                                <td>{ele.phone_number}</td>
+                                                <td>{ele.address}</td>
+                                                <td>{ele.customer_type}</td>
+                                                <td>{ele.delivery_schedule}</td>
+                                                <td>
+                                                    <div className="btn-group btn-group-sm">
+                                                        <button onClick={() => navigate('/customers/' + ele.enc_id)} className="btn btn-outline-primary">
+                                                            View
+                                                        </button>
+                                                        <button className="btn btn-outline-secondary" onClick={() => navigate('/customers/edit/' + ele.enc_id)}>
+                                                            Edit
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>

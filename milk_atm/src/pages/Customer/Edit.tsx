@@ -2,25 +2,20 @@
 
 import type React from "react"
 import { useEffect, useState } from "react"
-import { Link, useNavigate } from 'react-router-dom'
-import { createCustomers, fetchCities, fetchStates } from "../../services/api"
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { createCustomers, editCustomers, fetchCities, fetchCustomer, fetchStates } from "../../services/api"
 
-export default function AddCustomerPage() {
+export default function EditCustomerPage() {
+    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [states, setStates] = useState([]);
-    useEffect(() => {
-        fetchStates().then(res => {
-            console.log(">>>CA:ED", res.data)
-        })
-    }, [])
     const [formData, setFormData] = useState({
         first_name: "",
         last_name: "",
         phone_number: "",
         address: "",
-        state_id: 1,
-        city_id: 1,
+        state: 1,
+        city: 1,
         customer_type: "individual",
         preferred_payment_method: "cash",
         delivery_schedule: "morning",
@@ -32,13 +27,18 @@ export default function AddCustomerPage() {
     const [errors, setErrors] = useState<Record<string, string>>({})
 
     useEffect(() => {
+        console.log(">>", id)
+        fetchCustomer(id).then(res => {
+            console.log("Res", res)
+            setFormData(res);
+        })
         fetchStates().then(async res => {
             setStates(await res);
         })
         fetchCities().then(async res => {
             setCities(await res)
         })
-    }, [])
+    }, [id])
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData((prev) => ({
@@ -65,23 +65,23 @@ export default function AddCustomerPage() {
 
         // Address validation
         if (!formData.address.trim()) newErrors.address = "Street address is required"
-        if (!formData.city_id) newErrors.city_id = "City is required"
-        if (!formData.state_id) newErrors.state_id = "State is required"
+        if (!formData.city) newErrors.city = "City is required"
+        if (!formData.state) newErrors.state = "State is required"
 
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
+        console.log("Hadnle Submi called", formData);
         e.preventDefault()
-
         if (!validateForm()) return
-
+        console.log(">>>>Valie")
         setIsSubmitting(true)
 
         try {
             // Simulate API call
-            const res = await createCustomers(formData)
+            const res = await editCustomers(id, formData)
             console.log("Repose", res)
             // Redirect to customers list
             navigate("/customers")
@@ -98,7 +98,7 @@ export default function AddCustomerPage() {
             <div className="row mb-4">
                 <div className="col-12">
                     <div className="d-flex justify-content-between align-items-center">
-                        <h1 className="h3 mb-0">Add New Customer</h1>
+                        <h1 className="h3 mb-0">Edit Customer</h1>
                         <Link to="/customers" className="btn btn-outline-secondary">
                             Back to Customers
                         </Link>
@@ -192,26 +192,26 @@ export default function AddCustomerPage() {
                                         <label htmlFor="state" className="form-label">
                                             State *
                                         </label>
-                                        <select name="state" id="state" className={`form-control ${errors.state ? "is-invalid" : ""}`} value={formData.state_id}
+                                        <select name="state" id="state" className={`form-control ${errors.state ? "is-invalid" : ""}`} value={formData.state}
                                             onChange={handleChange}
                                             required>
                                             {states && states.map(ele => <option value={ele.id} key={ele.id}>{ele.value}</option>
                                             )}
                                         </select>
-                                        {errors.state_id && <div className="invalid-feedback">{errors.state_id}</div>}
+                                        {errors.state && <div className="invalid-feedback">{errors.state}</div>}
                                     </div>
 
                                     <div className="col-md-5 mb-3">
                                         <label htmlFor="city" className="form-label">
                                             City *
                                         </label>
-                                        <select name="city" id="city" className={`form-control ${errors.city ? "is-invalid" : ""}`} value={formData.city_id}
+                                        <select name="city" id="city" className={`form-control ${errors.city ? "is-invalid" : ""}`} value={formData.city}
                                             onChange={handleChange}
                                             required>
                                             {cities && cities.map(ele => <option value={ele.id} key={ele.id}>{ele.value}</option>
                                             )}
                                         </select>
-                                        {errors.city_id && <div className="invalid-feedback">{errors.city_id}</div>}
+                                        {errors.city && <div className="invalid-feedback">{errors.city}</div>}
                                     </div>
                                 </div>
 
@@ -316,7 +316,7 @@ export default function AddCustomerPage() {
                                                 Saving...
                                             </>
                                         ) : (
-                                            "Add Customer"
+                                            "Update Customer"
                                         )}
                                     </button>
                                 </div>

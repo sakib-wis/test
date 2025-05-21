@@ -1,17 +1,5 @@
 from rest_framework import serializers
-from .models import Cities, Customer, MilkSale, States
-
-
-class StateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = States
-        fields = '__all__'
-
-
-class CitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Cities
-        fields = '__all__'
+from .models import *
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -20,7 +8,33 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AddCustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        exclude = ['id', 'enc_id']
+
+
+class GetMilkSaleSerializer(serializers.ModelSerializer):
+    customer = CustomerSerializer()
+
+    class Meta:
+        model = MilkSale
+        fields = '__all__'
+
+
 class MilkSaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = MilkSale
+        fields = '__all__'
+
+
+class StatesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = States
+        fields = '__all__'
+
+
+class CitiesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cities
         fields = '__all__'
