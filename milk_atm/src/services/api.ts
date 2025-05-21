@@ -28,6 +28,10 @@ export const fetchUserData = async () => {
   const response = await api.get("/account/user"); // example
   return response.data;
 };
+export const fetchStates = async () => {
+  const response = await api.get("/states"); // example
+  return response.data;
+};
 
 // You can export the axios instance too if needed
 export default api;

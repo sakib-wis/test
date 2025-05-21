@@ -23,14 +23,13 @@ const Customers: React.FC = () => {
         setForm({ name: '', phone_number: '', address: '' });
     };
     useEffect(() => {
-        if (tableRef.current) {
+        if (tableRef.current) {            
             // Initialize DataTables
-            // const table = $(tableRef.current).DataTable();
-
-            // // Cleanup on unmount
-            // return () => {
-            //     table.destroy(true);
-            // };
+            const table = $(tableRef.current).DataTable();
+            // Cleanup on unmount
+            return () => {
+                // table.destroy(true);
+            };
         }
     }, []);
     return (

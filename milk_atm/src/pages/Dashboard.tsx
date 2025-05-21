@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     PieChart,
     Calendar,
@@ -79,9 +80,12 @@ const Dashboard: React.FC = () => {
     return (
         <div className="container-fluid p-4">
             <div className="row mb-4">
-                <div className="col-12">
+                <div className="col-10">
                     <h1 className="display-5 fw-bold">Dairy Sales Dashboard</h1>
                     <p className="text-muted">Monitor your milk sales and payment statistics</p>
+                </div>
+                <div className="col-2 float-end">
+                    <button className="btn btn-primary"><FontAwesomeIcon icon={['fas', 'plus']} /> Add New Sale</button>
                 </div>
             </div>
 
