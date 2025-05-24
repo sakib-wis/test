@@ -4,26 +4,26 @@ import 'datatables.net';
 import { useNavigate } from 'react-router-dom';
 import { fetchSales } from '../services/api';
 import type { CustomerInterface } from './Sales/Sale';
+import { milk_types_options, type SaleInterface, type TotalInterface } from '../types';
+import Loader from '../components/Loader';
+import { formatCurrency, getTodayDate } from '../utils/helpers';
 
-export interface SaleInterface {
-    id: number;
-    customer: CustomerInterface;
-    quantity: number;
-    price: number;
-    date: string;
-}
 
 const Sales: React.FC = () => {
     const navigate = useNavigate();
     const tableRef = useRef<HTMLTableElement>(null);
     const [sales, setSales] = useState<SaleInterface[]>([]);
+    const [total, setTotal] = useState<TotalInterface>({
+        total_price: 1200,
+        total_quantity: 120
+    });
     const tableInitialized = useRef<boolean>(false); // prevent multiple initializations
-
+    const [loading, setLoading] = useState<boolean>(true);
+    const [fromDate, setFromDate] = useState(getTodayDate());
+    const [toDate, setToDate] = useState(getTodayDate());
     // Fetch data on mount
     useEffect(() => {
-        fetchSales().then(res => {
-            setSales(res);
-        });
+        fetchFilteredSales()
     }, []);
 
     // Initialize DataTable after sales data is loaded
@@ -41,7 +41,30 @@ const Sales: React.FC = () => {
             }
         };
     }, [sales]);
-
+    const fetchFilteredSales = async () => {
+        setLoading(true);
+        const payload: any = {
+            fromDate,
+            toDate
+        }
+        fetchSales(payload).then(res => {
+            setSales(res.data);
+            setTotal(res.total)
+        }).finally(() => {
+            setLoading(false);
+            setTimeout(() => {
+                if (tableRef.current)
+                    $(tableRef.current).DataTable();
+            }, 100)
+        });
+    };
+    const clearFilteredSales = () => {
+        if (fromDate || toDate) {
+            setFromDate('');
+            setToDate('');
+            fetchFilteredSales()
+        }
+    }
     return (
         <div className="p-6">
             <div className="d-flex justify-content-between">
@@ -55,30 +78,70 @@ const Sales: React.FC = () => {
                     </button>
                 </div>
             </div>
-            <div className='table-wrapper mt-5'>
-                <table className="w-full border display" ref={tableRef}>
-                    <thead>
-                        <tr className="bg-gray-100">
-                            <th className="border px-4 py-2">Customer</th>
-                            <th className="border px-4 py-2">Qty (L)</th>
-                            <th className="border px-4 py-2">Rate</th>
-                            <th className="border px-4 py-2">Total</th>
-                            <th className="border px-4 py-2">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sales.map((s) => (
-                            <tr key={s.id}>
-                                <td className="border px-4 py-2">{s.customer.first_name} {s.customer.last_name}</td>
-                                <td className="border px-4 py-2">{s.quantity}</td>
-                                <td className="border px-4 py-2">{s.price}</td>
-                                <td className="border px-4 py-2">{s.quantity * s.price}</td>
-                                <td className="border px-4 py-2">{s.date}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            <div className="row mb-3">
+                <div className="col-md-3">
+                    <label className="form-label">From Date</label>
+                    <input
+                        type="date"
+                        className="form-control"
+                        value={fromDate}
+                        onChange={(e) => setFromDate(e.target.value)}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <label className="form-label">To Date</label>
+                    <input
+                        type="date"
+                        className="form-control"
+                        value={toDate}
+                        onChange={(e) => setToDate(e.target.value)}
+                    />
+                </div>
+                <div className="col-md-3 d-flex align-items-end">
+                    <button className="btn btn-primary" onClick={fetchFilteredSales}>
+                        Filter
+                    </button>
+                    <button className="btn btn-danger ms-2" onClick={clearFilteredSales}>
+                        Clear Filter
+                    </button>
+                </div>
             </div>
+
+            {
+                loading ? <Loader /> : <div className='table-wrapper mt-5'>
+                    <table className="w-full border display" ref={tableRef}>
+                        <thead>
+                            <tr className="bg-gray-100">
+                                <th className="border px-4 py-2">Customer</th>
+                                <th className="border px-4 py-2">Qty (L)</th>
+                                <th className="border px-4 py-2">Milk Type</th>
+                                <th className="border px-4 py-2">Date</th>
+                                <th className="border px-4 py-2">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {sales.map((s) => (
+                                <tr key={s.id}>
+                                    <td className="border px-4 py-2">{s.customer.first_name} {s.customer.last_name}</td>
+                                    <td className="border px-4 py-2">{s.quantity}</td>
+                                    <td className="border px-4 py-2">{milk_types_options.find(ele => ele.id === s.milk_type)?.value}</td>
+                                    <td className="border px-4 py-2">{s.date}</td>
+                                    <td className="border px-4 py-2">{formatCurrency(s.price)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        <tfoot >
+                            <tr className="bg-dark text-white">
+                                <td className="border px-4 py-2">Total Sale</td>
+                                <td className="border px-4 py-2">{total.total_quantity} Lt.</td>
+                                <td className="border px-4 py-2"></td>
+                                <td className="border px-4 py-2"></td>
+                                <td className="border px-4 py-2">{formatCurrency(total.total_price)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
         </div>
     );
 };

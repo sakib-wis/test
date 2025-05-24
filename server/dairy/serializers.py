@@ -9,6 +9,9 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 
 class AddCustomerSerializer(serializers.ModelSerializer):
+    additional_notes = serializers.CharField(
+        required=False, allow_null=True, allow_blank=True)
+
     class Meta:
         model = Customer
         exclude = ['id', 'enc_id']

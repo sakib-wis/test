@@ -4,16 +4,15 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from 'react-router-dom'
 import { createCustomers, fetchCities, fetchStates } from "../../services/api"
+import Loader from "../../components/Loader";
 
 export default function AddCustomerPage() {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [states, setStates] = useState([]);
-    useEffect(() => {
-        fetchStates().then(res => {
-            console.log(">>>CA:ED", res.data)
-        })
-    }, [])
+    const [states, setStates] = useState([])
+    const [cities, setCities] = useState([])
+    const [errors, setErrors] = useState<Record<string, string>>({})
+    const [loading, setLoading] = useState<boolean>(true);
     const [formData, setFormData] = useState({
         first_name: "",
         last_name: "",
@@ -27,16 +26,17 @@ export default function AddCustomerPage() {
         delivery_frequency: "daily",
         additional_notes: "",
     })
-    const [states, setStates] = useState([])
-    const [cities, setCities] = useState([])
-    const [errors, setErrors] = useState<Record<string, string>>({})
 
     useEffect(() => {
         fetchStates().then(async res => {
             setStates(await res);
+        }).finally(() => {
+            setLoading(false);
         })
         fetchCities().then(async res => {
             setCities(await res)
+        }).finally(() => {
+            setLoading(false);
         })
     }, [])
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -108,7 +108,7 @@ export default function AddCustomerPage() {
             </div>
 
             <div className="row">
-                <div className="col-lg-10 col-xl-8 mx-auto">
+                {loading ? <Loader /> : <div className="col-lg-10 col-xl-8 mx-auto">
                     <div className="card border-0 shadow-sm">
                         <div className="card-body p-4">
                             <form onSubmit={handleSubmit} noValidate>
@@ -161,6 +161,7 @@ export default function AddCustomerPage() {
                                             value={formData.phone_number}
                                             onChange={handleChange}
                                             required placeholder="Enter Value"
+                                            maxLength={10}
                                         />
                                         {errors.phone_number && <div className="invalid-feedback">{errors.phone_number}</div>}
                                     </div>
@@ -323,7 +324,7 @@ export default function AddCustomerPage() {
                             </form>
                         </div>
                     </div>
-                </div>
+                </div>}
             </div>
         </div>
     )

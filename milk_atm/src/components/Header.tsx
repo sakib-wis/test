@@ -7,7 +7,7 @@ const Header: React.FC = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
             <div className="container">
-                <Link className="navbar-brand" to="/">Milk ATM</Link>
+                <Link className="navbar-brand" to="/"><img src="/logo.png" alt="logo" className='logo' /> Milk ATM</Link>
                 <div className="collapse navbar-collapse">
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">

@@ -3,22 +3,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import $ from 'jquery';
 import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import 'datatables.net';
-import { fetchCustomers } from '../services/api';
-import type { CustomerInterface } from './Sales/Sale';
+import { deleteCustomers, fetchCustomers } from '../services/api';
+import type { CustomerInterface } from '../types';
+import Loader from '../components/Loader';
+import Swal from 'sweetalert2';
 
 const Customers: React.FC = () => {
     const navigate = useNavigate();
     const [customers, setCustomers] = useState<CustomerInterface[]>([]);
     const tableRef = useRef<HTMLTableElement>(null);
     const tableInitialized = useRef<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     // Fetch customer data
     useEffect(() => {
+        loadCustomers()
+    }, []);
+    const loadCustomers = () => {
         fetchCustomers().then(res => {
             setCustomers(res);
+        }).finally(() => {
+            setLoading(false);
         });
-    }, []);
-
+    }
     // Initialize DataTables after data is loaded
     useEffect(() => {
         if (customers.length > 0 && tableRef.current && !tableInitialized.current) {
@@ -33,7 +40,27 @@ const Customers: React.FC = () => {
             }
         };
     }, [customers]);
+    const deleteCustomer = async (enc_id: string) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'This action cannot be undone!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+        });
 
+        if (result.isConfirmed) {
+            setLoading(true)
+            deleteCustomers(enc_id).then(res => {
+                Swal.fire('Deleted!', 'The item has been deleted.', 'success');
+                loadCustomers()
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
+    }
     return (
         <div className="container py-4">
             <div className="row mb-4">
@@ -47,9 +74,8 @@ const Customers: React.FC = () => {
                     <hr />
                 </div>
             </div>
-
             <div className="row">
-                <div className="col-12">
+                {loading ? <Loader /> : <div className="col-12">
                     <div className="card border-0 shadow-sm">
                         <div className="card-body p-0">
                             <div className="table-responsive">
@@ -80,6 +106,9 @@ const Customers: React.FC = () => {
                                                         <button className="btn btn-outline-secondary" onClick={() => navigate('/customers/edit/' + ele.enc_id)}>
                                                             Edit
                                                         </button>
+                                                        <button className="btn btn-outline-danger" onClick={() => deleteCustomer(ele.enc_id)}>
+                                                            Delete
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -89,7 +118,7 @@ const Customers: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>}
             </div>
         </div>
     );

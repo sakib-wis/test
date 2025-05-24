@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     PieChart,
@@ -22,6 +22,9 @@ import {
     XAxis,
     YAxis,
 } from "recharts"
+import { Link } from "react-router-dom";
+import { fetchDashboard } from "../services/api";
+import type { dashboardInterface } from "../types";
 
 const dailySalesData = [
     { time: "6AM", liters: 120 },
@@ -71,11 +74,34 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
 
 const Dashboard: React.FC = () => {
     const [selectedPeriod, setSelectedPeriod] = useState("today")
-
+    const [dashboard, setDashboard] = useState<dashboardInterface>({
+        today_totals: {
+            total_price: 0,
+            total_quantity: 0
+        },
+        week_totals: {
+            total_price: 0,
+            total_quantity: 0
+        },
+        monthly_totals: {
+            total_price: 0,
+            total_quantity: 0
+        },
+        yearly_totals: {
+            total_price: 0,
+            total_quantity: 0
+        },
+        total_customer: 0
+    })
     const totalSalesToday = dailySalesData.reduce((sum, item) => sum + item.liters, 0)
     const totalSalesMonth = monthlySalesData[new Date().getMonth()].liters
     const totalOnlinePaymentToday = dailyPaymentData[0].value
-
+    useEffect(() => {
+        fetchDashboard().then(res => {
+            console.log(">Res", res)
+            setDashboard(res)
+        })
+    }, [])
     return (
         <div className="container-fluid p-4">
             <div className="row mb-4">
@@ -84,7 +110,7 @@ const Dashboard: React.FC = () => {
                     <p className="text-muted">Monitor your milk sales and payment statistics</p>
                 </div>
                 <div className="col-2 float-end">
-                    <button className="btn btn-primary"><FontAwesomeIcon icon={['fas', 'plus']} /> Add New Sale</button>
+                    <Link className="btn btn-primary" to='/sales/sale'><FontAwesomeIcon icon={['fas', 'plus']} /> Add New Sale</Link>
                 </div>
             </div>
 
@@ -95,14 +121,14 @@ const Dashboard: React.FC = () => {
                         icon: <Droplets className="text-primary" size={24} />,
                         bg: "primary",
                         label: "Today's Sales",
-                        value: `${totalSalesToday} L`,
+                        value: `${dashboard.today_totals.total_quantity} L`,
                         change: "+12.5%",
                     },
                     {
                         icon: <Calendar className="text-success" size={24} />,
                         bg: "success",
                         label: "Monthly Sales",
-                        value: `${totalSalesMonth} L`,
+                        value: `${dashboard.monthly_totals.total_quantity} L`,
                         change: "+8.3%",
                     },
                     {
@@ -116,7 +142,7 @@ const Dashboard: React.FC = () => {
                         icon: <Users className="text-warning" size={24} />,
                         bg: "warning",
                         label: "Active Customers",
-                        value: `124`,
+                        value: `${dashboard.total_customer}`,
                         change: "+3.1%",
                     },
                 ].map((card, i) => (

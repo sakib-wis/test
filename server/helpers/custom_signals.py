@@ -7,6 +7,7 @@ from helpers import helpers
 # List of your project-specific app names
 project_apps = [
     'dairy',
+    'superadmin',
 ]
 
 # Function to handle post_save signal for all models

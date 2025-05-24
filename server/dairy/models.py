@@ -11,7 +11,7 @@ class States(BaseModel):
 
 class Cities(BaseModel):
     state = models.ForeignKey(
-        States, on_delete=models.CASCADE, related_name='cities')
+        States, on_delete=models.CASCADE, related_name='cities', null=True)
     value = models.CharField(max_length=200)
 
     class Meta:
@@ -56,15 +56,21 @@ class Customer(BaseModel):
         max_length=200, choices=DELIVERY_SCHEDULE, default='morning')
     delivery_frequency = models.CharField(
         max_length=200, choices=DELIVERY_FREQUENCY, default='daily')
-    additional_notes = models.TextField(null=True)
+    additional_notes = models.TextField(null=True, default=None)
 
     class Meta:
         db_table = 'customers'
 
 
 class MilkSale(BaseModel):
+    MILK_TYPE = [
+        ('1', 'Mix'),
+        ('2', 'Buffalo'),
+        ('3', 'Cow'),
+    ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     quantity = models.FloatField()
+    milk_type = models.CharField(max_length=5, choices=MILK_TYPE, default='1')
     price = models.DecimalField(max_digits=6, decimal_places=2)
     date = models.DateField(auto_now_add=True)
 

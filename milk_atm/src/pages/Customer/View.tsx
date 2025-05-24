@@ -4,29 +4,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { fetchCustomer } from "../../services/api";
+import type { CustomerInterface } from "../../types";
+import Loader from "../../components/Loader";
 
-interface Customer {
-    id: number;
-    enc_id: string | null;
-    first_name: string | null;
-    last_name: string | null;
-    phone_number: string | null;
-    address: string | null;
-    customer_type: string | null;
-    preferred_payment_method: string | null;
-    delivery_schedule: string | null;
-    delivery_frequency: string | null;
-    additional_notes: string | null;
-    city: number | null;
-    state: number | null;
-}
+
 
 const CustomerView: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [customer, setCustomer] = useState<Customer | null>(null);
+    const [customer, setCustomer] = useState<CustomerInterface | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    useEffect(() => {        
+    useEffect(() => {
         fetchCustomer(id).then(res => {
             setCustomer(res);
         }).catch(err => {
@@ -37,7 +25,7 @@ const CustomerView: React.FC = () => {
         })
     }, [id]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Loader />;
     if (error || !customer) return <div>{error || "Customer not found."}</div>;
 
     return (
