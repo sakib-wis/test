@@ -102,11 +102,11 @@ const Dashboard: React.FC = () => {
     return (
         <div className="container-fluid p-4">
             <div className="row mb-4">
-                <div className="col-10">
+                <div className="col-12 col-lg-10">
                     <h1 className="display-5 fw-bold">Dairy Sales Dashboard</h1>
                     <p className="text-muted">Monitor your milk sales and payment statistics</p>
                 </div>
-                <div className="col-2 float-end">
+                <div className="col-12 col-lg-2 float-end">
                     <Link className="btn btn-primary" to='/sales/sale'><FontAwesomeIcon icon={['fas', 'plus']} /> Add New Sale</Link>
                 </div>
             </div>

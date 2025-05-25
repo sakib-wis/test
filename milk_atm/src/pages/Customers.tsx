@@ -29,7 +29,11 @@ const Customers: React.FC = () => {
     // Initialize DataTables after data is loaded
     useEffect(() => {
         if (customers.length > 0 && tableRef.current && !tableInitialized.current) {
-            $(tableRef.current).DataTable();
+            $(tableRef.current).DataTable({
+                responsive: true,
+                autoWidth: false,
+                order: [[0, 'asc']],
+            });
             tableInitialized.current = true;
         }
 

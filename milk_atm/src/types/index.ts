@@ -31,7 +31,7 @@ export interface AdminPanelInterface {
     mix_milk_rate: number;
 }
 export interface MilkTypeInterface {
-    id: number;
+    id: number | string;
     value: string;
 }
 
@@ -45,7 +45,7 @@ export interface SaleInterface {
     id: number;
     customer: CustomerInterface;
     quantity: number;
-    milk_type: number;
+    milk_type: number | string;
     price: number;
     date: string;
 }

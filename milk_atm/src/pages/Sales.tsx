@@ -28,7 +28,11 @@ const Sales: React.FC = () => {
     // Initialize DataTable after sales data is loaded
     useEffect(() => {
         if (sales.length > 0 && tableRef.current && !tableInitialized.current) {
-            $(tableRef.current).DataTable();
+            $(tableRef.current).DataTable({
+                responsive: true,
+                autoWidth: false,
+                order: [[0, 'asc']]
+            });
             tableInitialized.current = true;
         }
 
@@ -53,7 +57,11 @@ const Sales: React.FC = () => {
             setLoading(false);
             setTimeout(() => {
                 if (tableRef.current)
-                    $(tableRef.current).DataTable();
+                    $(tableRef.current).DataTable({
+                        responsive: true,
+                        autoWidth: false,
+                        order: [[0, 'asc']],
+                    });
             }, 100)
         });
     };
@@ -123,7 +131,7 @@ const Sales: React.FC = () => {
                                 <tr key={s.id}>
                                     <td className="border px-4 py-2">{s.customer.first_name} {s.customer.last_name}</td>
                                     <td className="border px-4 py-2">{s.quantity}</td>
-                                    <td className="border px-4 py-2">{milk_types_options.find(ele => ele.id === s.milk_type)?.value}</td>
+                                    <td className="border px-4 py-2">{milk_types_options.find(ele => ele.id == s.milk_type)?.value}</td>
                                     <td className="border px-4 py-2">{s.date}</td>
                                     <td className="border px-4 py-2">{formatCurrency(s.price)}</td>
                                 </tr>

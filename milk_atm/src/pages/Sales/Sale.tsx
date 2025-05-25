@@ -121,8 +121,8 @@ export default function SaleMilk() {
                 <div className="col-12">
                     <div className="d-flex justify-content-between align-items-center">
                         <h1 className="h3 mb-0">Add Sale</h1>
-                        <Link to="/customers" className="btn btn-outline-secondary">
-                            Back to Customers
+                        <Link to="/sales" className="btn btn-outline-secondary">
+                            Back to Sales
                         </Link>
                     </div>
                     <hr />
