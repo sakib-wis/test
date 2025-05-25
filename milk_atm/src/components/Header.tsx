@@ -1,9 +1,18 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import Collapse from 'bootstrap/js/dist/collapse';
 const Header: React.FC = () => {
     const { token, logout } = useAuth();
+    const location = useLocation();
+    useEffect(() => {
+        const collapseElement = document.getElementById("navbarSupportedContent");
+        if (collapseElement && collapseElement.classList.contains("show")) {
+            const bsCollapse = Collapse.getInstance(collapseElement) || new Collapse(collapseElement);
+            bsCollapse.hide();
+        }
+    }, [location]);
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
             <div className="container-fluid">

@@ -106,7 +106,7 @@ const Sales: React.FC = () => {
                         onChange={(e) => setToDate(e.target.value)}
                     />
                 </div>
-                <div className="col-md-3 d-flex align-items-end">
+                <div className="col-md-3 d-flex align-items-end mt-2 mt-lg-0">
                     <button className="btn btn-primary" onClick={fetchFilteredSales}>
                         Filter
                     </button>

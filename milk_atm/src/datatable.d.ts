@@ -4,3 +4,8 @@ declare module 'datatables.net' {
         responsive?: boolean | object;
     }
 }
+declare global {
+    interface Window {
+        bootstrap: any;
+    }
+}
