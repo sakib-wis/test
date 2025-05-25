@@ -19,7 +19,6 @@ class DashboardView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        print(self.request.META.get('HTTP_AUTHORIZATION'))
         today = now().date()
         start_of_week = today - timedelta(days=today.weekday())  # Monday
         start_of_month = today.replace(day=1)
@@ -58,9 +57,6 @@ class StatesView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        print("Tolen:::::", self.request.META.get('HTTP_AUTHORIZATION'))
-        print("Tolen:::::", self.request.headers.get('HTTP_AUTHORIZATION'))
-        print("Tolen:::::", self.request.headers.get('AUTHORIZATION'))
         states = States.objects.all()
         serializers = StatesSerializer(states, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
@@ -90,6 +86,7 @@ class CustomersView(APIView):
 class AddCustomer(APIView):
     authentication_classes = [JWTAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         serializer = AddCustomerSerializer(data=request.data)
         if serializer.is_valid():
@@ -101,6 +98,7 @@ class AddCustomer(APIView):
 class CustomerDetailView(APIView):
     authentication_classes = [JWTAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
+
     def get(self, request, enc_id):
         customer = get_object_or_404(Customer, enc_id=enc_id)
         serializer = CustomerSerializer(customer)
