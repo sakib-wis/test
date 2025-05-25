@@ -34,16 +34,9 @@ ENV/
 .DS_Store
 Thumbs.db
 
-<<<<<<< HEAD
-account/migrations/
-account/__pycache__/
-dairy/__pycache__/
-dairy/migrations/
-=======
 accounts/migrations/
 accounts/__pycache__/
 dairy/__pycache__/
 dairy/migrations/
 superadmin/__pycache__/
 superadmin/migrations/
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524

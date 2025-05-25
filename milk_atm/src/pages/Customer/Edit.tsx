@@ -3,14 +3,9 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from 'react-router-dom'
-<<<<<<< HEAD
-import { createCustomers, editCustomers, fetchCities, fetchCustomer, fetchStates } from "../../services/api"
-import Loader from "../../components/Loader";
-=======
 import { editCustomers, fetchCities, fetchCustomer, fetchStates } from "../../services/api"
 import Loader from "../../components/Loader";
 import type { CitiesInterface, StatesInterface } from "../../types";
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
 
 export default function EditCustomerPage() {
     const { id } = useParams<{ id: string }>();
@@ -30,13 +25,8 @@ export default function EditCustomerPage() {
         delivery_frequency: "daily",
         additional_notes: "",
     })
-<<<<<<< HEAD
-    const [states, setStates] = useState([])
-    const [cities, setCities] = useState([])
-=======
     const [states, setStates] = useState<StatesInterface[]>([])
     const [cities, setCities] = useState<CitiesInterface[]>([])
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
     const [errors, setErrors] = useState<Record<string, string>>({})
 
     useEffect(() => {
@@ -95,15 +85,11 @@ export default function EditCustomerPage() {
         e.preventDefault()
         if (!validateForm()) return
         setIsSubmitting(true)
-<<<<<<< HEAD
-
-=======
         if (!id) {
             alert("Invalid customer ID")
             setIsSubmitting(false)
             return
         }
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
         try {
             // Simulate API call
             const res = await editCustomers(id, formData)

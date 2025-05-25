@@ -3,10 +3,6 @@ import $ from 'jquery';
 import 'datatables.net';
 import { useNavigate } from 'react-router-dom';
 import { fetchSales } from '../services/api';
-<<<<<<< HEAD
-import type { CustomerInterface } from './Sales/Sale';
-=======
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
 import { milk_types_options, type SaleInterface, type TotalInterface } from '../types';
 import Loader from '../components/Loader';
 import { formatCurrency, getTodayDate } from '../utils/helpers';

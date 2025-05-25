@@ -120,14 +120,11 @@ CORS_ALLOW_ALL_ORIGINS = config(
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-<<<<<<< HEAD
-=======
 if DEBUG:
     STATICFILES_DIRS = [BASE_DIR / 'static']
 else:
     STATIC_ROOT = BASE_DIR / 'staticfiles'
 
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -157,8 +154,3 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
 }
-<<<<<<< HEAD
-=======
-
-# Check code 
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524

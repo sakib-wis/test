@@ -2,10 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-<<<<<<< HEAD
-import axios from "axios";
-=======
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
 import { fetchCustomer } from "../../services/api";
 import type { CustomerInterface } from "../../types";
 import Loader from "../../components/Loader";
@@ -21,15 +17,9 @@ const CustomerView: React.FC = () => {
         fetchCustomer(id).then(res => {
             setCustomer(res);
         }).catch(err => {
-<<<<<<< HEAD
-            setError("Failed to load customer data:", err);
-        }).finally(res => {
-            console.log(">res", res)
-=======
             if (err)
                 setError("Failed to load customer data:");
         }).finally(() => {
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
             setLoading(false);
         })
     }, [id]);

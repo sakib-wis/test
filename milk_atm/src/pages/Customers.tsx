@@ -53,11 +53,7 @@ const Customers: React.FC = () => {
 
         if (result.isConfirmed) {
             setLoading(true)
-<<<<<<< HEAD
-            deleteCustomers(enc_id).then(res => {
-=======
             deleteCustomers(enc_id).then(() => {
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
                 Swal.fire('Deleted!', 'The item has been deleted.', 'success');
                 loadCustomers()
             }).finally(() => {
