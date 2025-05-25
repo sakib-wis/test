@@ -122,9 +122,9 @@ CORS_ALLOW_ALL_ORIGINS = config(
 
 STATIC_URL = 'static/'
 if PRODUCTION:
-    STATICFILES_DIRS = [BASE_DIR / 'static']
-else:
     STATIC_ROOT = BASE_DIR / 'staticfiles'
+else:
+    STATICFILES_DIRS = [BASE_DIR / 'static']
 
 
 # Default primary key field type
