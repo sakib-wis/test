@@ -93,12 +93,18 @@ const Dashboard: React.FC = () => {
         },
         total_customer: 0
     })
+<<<<<<< HEAD
     const totalSalesToday = dailySalesData.reduce((sum, item) => sum + item.liters, 0)
     const totalSalesMonth = monthlySalesData[new Date().getMonth()].liters
     const totalOnlinePaymentToday = dailyPaymentData[0].value
     useEffect(() => {
         fetchDashboard().then(res => {
             console.log(">Res", res)
+=======
+    const totalOnlinePaymentToday = dailyPaymentData[0].value
+    useEffect(() => {
+        fetchDashboard().then(res => {
+>>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
             setDashboard(res)
         })
     }, [])
@@ -279,7 +285,11 @@ const Dashboard: React.FC = () => {
                                         >
                                             {dailyPaymentData.map((entry, index) => (
                                                 <Cell
+<<<<<<< HEAD
                                                     key={`cell-${index}`}
+=======
+                                                    key={`cell-${index}-${entry.name}`}
+>>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
                                                     fill={COLORS[index % COLORS.length]}
                                                 />
                                             ))}

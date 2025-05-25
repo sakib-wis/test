@@ -5,12 +5,21 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from 'react-router-dom'
 import { createCustomers, fetchCities, fetchStates } from "../../services/api"
 import Loader from "../../components/Loader";
+<<<<<<< HEAD
+=======
+import type { CitiesInterface, StatesInterface } from "../../types";
+>>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
 
 export default function AddCustomerPage() {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false)
+<<<<<<< HEAD
     const [states, setStates] = useState([])
     const [cities, setCities] = useState([])
+=======
+    const [states, setStates] = useState<StatesInterface[]>([])
+    const [cities, setCities] = useState<CitiesInterface[]>([])
+>>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
     const [errors, setErrors] = useState<Record<string, string>>({})
     const [loading, setLoading] = useState<boolean>(true);
     const [formData, setFormData] = useState({
