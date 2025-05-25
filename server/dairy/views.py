@@ -53,8 +53,8 @@ class DashboardView(APIView):
 
 
 class StatesView(APIView):
-    authentication_classes = [JWTAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication, SessionAuthentication]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request):
         states = States.objects.all()
