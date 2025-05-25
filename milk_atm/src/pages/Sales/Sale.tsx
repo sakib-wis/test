@@ -44,7 +44,7 @@ export default function SaleMilk() {
             setFormData((prev) => ({ ...prev, price: 0 }));
             return;
         }
-
+        console.log("Quantity:", quantity, "Milk Type:", formData.milk_type);
         let rate: number = 0;
         switch (formData.milk_type) {
             case 1:
@@ -59,7 +59,7 @@ export default function SaleMilk() {
             default:
                 rate = 0;
         }
-        if (!rate || isNaN(rate)) {
+        if (rate) {
             setFormData((prev) => ({ ...prev, price: 0 }));
             const calculatedPrice = quantity * rate;
             setFormData((prev) => ({

@@ -43,6 +43,7 @@ class DashboardView(APIView):
             total_quantity=Sum('quantity')
         )
         total_customer = Customer.objects.filter(end_date__isnull=True).count()
+        print(">>>today_totals,", today_totals)
         return Response({
             'today_totals': today_totals,
             'week_totals': week_totals,
