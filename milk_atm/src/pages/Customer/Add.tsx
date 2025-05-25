@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from 'react-router-dom'
 import { createCustomers, fetchCities, fetchStates } from "../../services/api"
 import Loader from "../../components/Loader";
+import type { CitiesInterface, StatesInterface } from "../../types";
 
 export default function AddCustomerPage() {
     const navigate = useNavigate();

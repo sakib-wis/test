@@ -2,26 +2,6 @@ import React, {
     createContext,
     useContext,
     useState,
-<<<<<<< HEAD
-    ReactNode,
-    useEffect,
-} from "react";
-import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-
-interface User {
-    id: number;
-    phone_number: string;
-    full_name: string | null;
-}
-
-interface AuthContextType {
-    token: string | null;
-    user: User | null;
-    login: (token: string, user: User) => void;
-    logout: () => void;
-}
-=======
     useEffect,
 } from "react";
 import type { ReactNode } from "react";
@@ -30,7 +10,6 @@ import { jwtDecode } from "jwt-decode";
 import type { AuthContextType, User } from "../types";
 
 
->>>>>>> d23d73ea38e4eb1ca0ea170c1bf48902d586e524
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
