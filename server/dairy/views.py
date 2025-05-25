@@ -18,6 +18,7 @@ class DashboardView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        print(self.request.META.get('HTTP_AUTHORIZATION'))
         today = now().date()
         start_of_week = today - timedelta(days=today.weekday())  # Monday
         start_of_month = today.replace(day=1)
