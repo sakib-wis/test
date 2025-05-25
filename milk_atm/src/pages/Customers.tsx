@@ -30,9 +30,7 @@ const Customers: React.FC = () => {
     useEffect(() => {
         if (customers.length > 0 && tableRef.current && !tableInitialized.current) {
             $(tableRef.current).DataTable({
-                responsive: true,
-                autoWidth: false,
-                order: [[0, 'asc']],
+                // responsive: true,
             });
             tableInitialized.current = true;
         }

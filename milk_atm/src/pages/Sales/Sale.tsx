@@ -20,7 +20,7 @@ export default function SaleMilk() {
     });
     const [formData, setFormData] = useState({
         customer: "1",
-        milk_type: 1,
+        milk_type: '1',
         quantity: "",
         price: 0,
     })
@@ -47,13 +47,13 @@ export default function SaleMilk() {
         console.log("Quantity:", quantity, "Milk Type:", formData.milk_type);
         let rate: number = 0;
         switch (formData.milk_type) {
-            case 1:
+            case '1':
                 rate = adminPanel.mix_milk_rate;
                 break;
-            case 2:
+            case '2':
                 rate = adminPanel.buffalo_milk_rate;
                 break;
-            case 3:
+            case '3':
                 rate = adminPanel.cow_milk_rate;
                 break;
             default:
