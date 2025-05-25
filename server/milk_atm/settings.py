@@ -26,6 +26,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-secret-key')
 ENCRYPTION_SECRECT_KEY = 'milk_atm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+PRODUCTION = config('PRODUCTION', default=False, cast=bool)
 DEBUG = True
 
 DOMAIN = config('DOMAIN', default='localhost')
@@ -120,7 +121,7 @@ CORS_ALLOW_ALL_ORIGINS = config(
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-if DEBUG:
+if PRODUCTION:
     STATICFILES_DIRS = [BASE_DIR / 'static']
 else:
     STATIC_ROOT = BASE_DIR / 'staticfiles'
