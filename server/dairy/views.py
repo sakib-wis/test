@@ -58,6 +58,8 @@ class StatesView(APIView):
 
     def get(self, request):
         print("Tolen:::::", self.request.META.get('HTTP_AUTHORIZATION'))
+        print("Tolen:::::", self.request.headers.get('HTTP_AUTHORIZATION'))
+        print("Tolen:::::", self.request.headers.get('AUTHORIZATION'))
         states = States.objects.all()
         serializers = StatesSerializer(states, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
