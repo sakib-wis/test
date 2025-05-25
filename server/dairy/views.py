@@ -62,7 +62,7 @@ class StatesView(APIView):
         return Response(serializers.data, status=status.HTTP_200_OK)
 
 
-class CitiesView(generics.ListCreateAPIView):
+class CitiesView(APIView):
     authentication_classes = [JWTAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
