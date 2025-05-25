@@ -27,22 +27,22 @@ const Sales: React.FC = () => {
 
     // Initialize DataTable after sales data is loaded
     useEffect(() => {
-        if (sales.length > 0 && tableRef.current && !tableInitialized.current) {
-            $(tableRef.current).DataTable({
-                responsive: true,
-                autoWidth: false,
-                order: [[0, 'asc']]
-            });
-            tableInitialized.current = true;
-        }
+        // if (sales.length > 0 && tableRef.current && !tableInitialized.current) {
+        //     $(tableRef.current).DataTable({
+        //         responsive: true,
+        //         autoWidth: false,
+        //         order: [[0, 'asc']]
+        //     });
+        //     tableInitialized.current = true;
+        // }
 
-        return () => {
-            // Cleanup on unmount
-            if (tableRef.current && $.fn.dataTable.isDataTable(tableRef.current)) {
-                // $(tableRef.current).DataTable().destroy(true);
-                // tableInitialized.current = false;
-            }
-        };
+        // return () => {
+        //     // Cleanup on unmount
+        //     if (tableRef.current && $.fn.dataTable.isDataTable(tableRef.current)) {
+        //         // $(tableRef.current).DataTable().destroy(true);
+        //         // tableInitialized.current = false;
+        //     }
+        // };
     }, [sales]);
     const fetchFilteredSales = async () => {
         setLoading(true);
@@ -56,12 +56,14 @@ const Sales: React.FC = () => {
         }).finally(() => {
             setLoading(false);
             setTimeout(() => {
-                if (tableRef.current)
+                if (tableRef.current && !tableInitialized.current) {
                     $(tableRef.current).DataTable({
                         responsive: true,
                         autoWidth: false,
-                        order: [[0, 'asc']],
+                        order: [[0, 'asc']]
                     });
+                    tableInitialized.current = true;
+                }
             }, 100)
         });
     };

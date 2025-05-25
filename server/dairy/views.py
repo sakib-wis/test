@@ -19,31 +19,31 @@ class DashboardView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        user_id = request.user.id
         today = now().date()
         start_of_week = today - timedelta(days=today.weekday())  # Monday
         start_of_month = today.replace(day=1)
         start_of_year = today.replace(month=1, day=1)
-
-        today_totals = MilkSale.objects.filter(date=today).aggregate(
+        query = Q(user_id=user_id, end_date__isnull=True)
+        today_totals = MilkSale.objects.filter(query, date=today).aggregate(
             total_price=Sum('price'),
             total_quantity=Sum('quantity')
         )
-        week_totals = MilkSale.objects.filter(date__gte=start_of_week, date__lte=today).aggregate(
-            total_price=Sum('price'),
-            total_quantity=Sum('quantity')
-        )
-
-        monthly_totals = MilkSale.objects.filter(date__gte=start_of_month, date__lte=today).aggregate(
+        week_totals = MilkSale.objects.filter(query, date__gte=start_of_week, date__lte=today).aggregate(
             total_price=Sum('price'),
             total_quantity=Sum('quantity')
         )
 
-        yearly_totals = MilkSale.objects.filter(date__gte=start_of_year, date__lte=today).aggregate(
+        monthly_totals = MilkSale.objects.filter(query, date__gte=start_of_month, date__lte=today).aggregate(
             total_price=Sum('price'),
             total_quantity=Sum('quantity')
         )
-        total_customer = Customer.objects.filter(end_date__isnull=True).count()
-        print(">>>today_totals,", today_totals)
+
+        yearly_totals = MilkSale.objects.filter(query, date__gte=start_of_year, date__lte=today).aggregate(
+            total_price=Sum('price'),
+            total_quantity=Sum('quantity')
+        )
+        total_customer = Customer.objects.filter(query).count()
         return Response({
             'today_totals': today_totals,
             'week_totals': week_totals,
@@ -78,7 +78,8 @@ class CustomersView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        query = Q(end_date__isnull=True)
+        user_id = request.user.id
+        query = Q(user_id=user_id, end_date__isnull=True)
         customers = Customer.objects.filter(query)
         serializer = CustomerSerializer(customers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -91,7 +92,7 @@ class AddCustomer(APIView):
     def post(self, request):
         serializer = AddCustomerSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -119,11 +120,16 @@ class CustomerDetailView(APIView):
         return Response({'res': "Customer Deleted"}, status=status.HTTP_201_CREATED)
 
 
-class MilkSaleCreateView(generics.CreateAPIView):
+class MilkSaleCreateView(APIView):
     authentication_classes = [JWTAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = MilkSaleSerializer
-    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = MilkSaleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AllMilkSalesView(APIView):
@@ -131,9 +137,10 @@ class AllMilkSalesView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        user_id = request.user.id
         fromDate = request.data.get('fromDate')
         toDate = request.data.get('toDate')
-        query = Q(end_date__isnull=True)
+        query = Q(user_id=user_id, end_date__isnull=True)
         if fromDate:
             query &= Q(date__gte=fromDate)
         if toDate:

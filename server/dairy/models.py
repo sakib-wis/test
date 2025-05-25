@@ -1,5 +1,6 @@
 from django.db import models
 from .base_models import BaseModel
+from accounts.models import User
 
 
 class States(BaseModel):
@@ -40,14 +41,16 @@ class Customer(BaseModel):
         ("alternate", 'Alternate Days'),
         ("weekly", 'Weekly')
     ]
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='customers', null=True)
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
     phone_number = models.CharField(max_length=15, null=True)
     address = models.TextField(null=True)
     city = models.ForeignKey(
-        Cities, on_delete=models.CASCADE, related_name='customer', null=True)
+        Cities, on_delete=models.CASCADE, related_name='customers', null=True)
     state = models.ForeignKey(
-        States, on_delete=models.CASCADE, related_name='customer', null=True)
+        States, on_delete=models.CASCADE, related_name='customers', null=True)
     customer_type = models.CharField(
         max_length=200, choices=CUSTOMER_TYPE, default='individual')
     preferred_payment_method = models.CharField(
@@ -68,6 +71,8 @@ class MilkSale(BaseModel):
         ('2', 'Buffalo'),
         ('3', 'Cow'),
     ]
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='milk_sale', null=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     quantity = models.FloatField()
     milk_type = models.CharField(max_length=5, choices=MILK_TYPE, default='1')
