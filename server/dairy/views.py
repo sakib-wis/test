@@ -15,6 +15,7 @@ from django.utils.timezone import now, timedelta
 
 
 class DashboardView(APIView):
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -53,8 +54,8 @@ class DashboardView(APIView):
 
 
 class StatesView(APIView):
-    # authentication_classes = [JWTAuthentication, SessionAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         print("Tolen:::::", self.request.META.get('HTTP_AUTHORIZATION'))
@@ -76,6 +77,7 @@ class CitiesView(generics.ListCreateAPIView):
 
 
 class CustomersView(APIView):
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -86,6 +88,8 @@ class CustomersView(APIView):
 
 
 class AddCustomer(APIView):
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = AddCustomerSerializer(data=request.data)
         if serializer.is_valid():
@@ -95,6 +99,8 @@ class AddCustomer(APIView):
 
 
 class CustomerDetailView(APIView):
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, enc_id):
         customer = get_object_or_404(Customer, enc_id=enc_id)
         serializer = CustomerSerializer(customer)
@@ -115,11 +121,14 @@ class CustomerDetailView(APIView):
 
 
 class MilkSaleCreateView(generics.CreateAPIView):
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = MilkSaleSerializer
     permission_classes = [IsAuthenticated]
 
 
 class AllMilkSalesView(APIView):
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
