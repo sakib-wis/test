@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from corsheaders.defaults import default_headers
 from datetime import timedelta
 from decouple import config
 from pathlib import Path
@@ -118,8 +119,9 @@ CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='http://localhost:
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = config(
     'CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
-
-
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'authorization',
+]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
