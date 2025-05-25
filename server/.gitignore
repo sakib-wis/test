@@ -34,7 +34,9 @@ ENV/
 .DS_Store
 Thumbs.db
 
-account/migrations/
-account/__pycache__/
+accounts/migrations/
+accounts/__pycache__/
 dairy/__pycache__/
 dairy/migrations/
+superadmin/__pycache__/
+superadmin/migrations/
