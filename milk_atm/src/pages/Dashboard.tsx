@@ -93,12 +93,9 @@ const Dashboard: React.FC = () => {
         },
         total_customer: 0
     })
-    const totalSalesToday = dailySalesData.reduce((sum, item) => sum + item.liters, 0)
-    const totalSalesMonth = monthlySalesData[new Date().getMonth()].liters
     const totalOnlinePaymentToday = dailyPaymentData[0].value
     useEffect(() => {
         fetchDashboard().then(res => {
-            console.log(">Res", res)
             setDashboard(res)
         })
     }, [])
@@ -279,7 +276,7 @@ const Dashboard: React.FC = () => {
                                         >
                                             {dailyPaymentData.map((entry, index) => (
                                                 <Cell
-                                                    key={`cell-${index}`}
+                                                    key={`cell-${index}-${entry.name}`}
                                                     fill={COLORS[index % COLORS.length]}
                                                 />
                                             ))}

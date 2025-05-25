@@ -27,7 +27,7 @@ class DashboardView(APIView):
             total_price=Sum('price'),
             total_quantity=Sum('quantity')
         )
-
+        print(">>>>>>", today_totals)
         week_totals = MilkSale.objects.filter(date__gte=start_of_week, date__lte=today).aggregate(
             total_price=Sum('price'),
             total_quantity=Sum('quantity')

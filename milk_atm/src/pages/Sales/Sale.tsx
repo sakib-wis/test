@@ -1,7 +1,7 @@
 
 
 import type React from "react"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from 'react-router-dom'
 import { fetchAdminPanel, fetchCustomers, milkSold } from "../../services/api";
 import { milk_types_options, type AdminPanelInterface, type CustomerInterface } from "../../types";
@@ -45,8 +45,8 @@ export default function SaleMilk() {
             return;
         }
 
-        let rate: Number = 0;
-        switch (Number(formData.milk_type)) {
+        let rate: number = 0;
+        switch (formData.milk_type) {
             case 1:
                 rate = adminPanel.mix_milk_rate;
                 break;
@@ -59,12 +59,14 @@ export default function SaleMilk() {
             default:
                 rate = 0;
         }
-
-        const price = (quantity * rate).toFixed(2);
-        setFormData((prev) => ({
-            ...prev,
-            price,
-        }));
+        if (!rate || isNaN(rate)) {
+            setFormData((prev) => ({ ...prev, price: 0 }));
+            const calculatedPrice = quantity * rate;
+            setFormData((prev) => ({
+                ...prev,
+                price: parseFloat(calculatedPrice.toFixed(2))
+            }));
+        }
     }, [formData.quantity, formData.milk_type, adminPanel]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

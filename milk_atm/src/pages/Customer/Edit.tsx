@@ -3,8 +3,9 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { createCustomers, editCustomers, fetchCities, fetchCustomer, fetchStates } from "../../services/api"
+import { editCustomers, fetchCities, fetchCustomer, fetchStates } from "../../services/api"
 import Loader from "../../components/Loader";
+import type { CitiesInterface, StatesInterface } from "../../types";
 
 export default function EditCustomerPage() {
     const { id } = useParams<{ id: string }>();
@@ -24,8 +25,8 @@ export default function EditCustomerPage() {
         delivery_frequency: "daily",
         additional_notes: "",
     })
-    const [states, setStates] = useState([])
-    const [cities, setCities] = useState([])
+    const [states, setStates] = useState<StatesInterface[]>([])
+    const [cities, setCities] = useState<CitiesInterface[]>([])
     const [errors, setErrors] = useState<Record<string, string>>({})
 
     useEffect(() => {
@@ -84,7 +85,11 @@ export default function EditCustomerPage() {
         e.preventDefault()
         if (!validateForm()) return
         setIsSubmitting(true)
-
+        if (!id) {
+            alert("Invalid customer ID")
+            setIsSubmitting(false)
+            return
+        }
         try {
             // Simulate API call
             const res = await editCustomers(id, formData)

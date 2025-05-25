@@ -1,6 +1,18 @@
+export interface User {
+    id: number;
+    phone_number: string;
+    full_name: string | null;
+}
+
+export interface AuthContextType {
+    token: string | null;
+    user: User | null;
+    login: (token: string, user: User) => void;
+    logout: () => void;
+}
 export interface CustomerInterface {
     id: number;
-    enc_id: string | null;
+    enc_id: string;
     first_name: string | null;
     last_name: string | null;
     phone_number: string | null;
@@ -14,15 +26,19 @@ export interface CustomerInterface {
     state: number | null;
 }
 export interface AdminPanelInterface {
-    cow_milk_rate: Number;
-    buffalo_milk_rate: Number;
-    mix_milk_rate: Number;
+    cow_milk_rate: number;
+    buffalo_milk_rate: number;
+    mix_milk_rate: number;
+}
+export interface MilkTypeInterface {
+    id: number;
+    value: string;
 }
 
-export const milk_types_options = [
-    { id: '1', value: 'Mix' },
-    { id: '2', value: 'Buffalo' },
-    { id: '3', value: 'Cow' },
+export const milk_types_options: MilkTypeInterface[] = [
+    { id: 1, value: 'Mix' },
+    { id: 2, value: 'Buffalo' },
+    { id: 3, value: 'Cow' },
 ]
 
 export interface SaleInterface {
@@ -43,4 +59,14 @@ export interface dashboardInterface {
     monthly_totals: TotalInterface;
     yearly_totals: TotalInterface;
     total_customer: number;
+}
+export interface StatesInterface {
+    id: number;
+    enc_id: string | null;
+    value: string;
+}
+export interface CitiesInterface {
+    id: number;
+    enc_id: string | null;
+    value: string;
 }
