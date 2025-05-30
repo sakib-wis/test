@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <div class="body-wrapper-inner">
+    <div class="container-fluid">
+      <h4>Manage Rates</h4>
+      <form method="post">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-12 col-lg-4 mb-3">
+            <label for="cow_milk_rate" class="form-input">Cow</label>
+            <input type="text" name="cow_milk_rate" id="cow_milk_rate" class="form-control" value="{{ form.cow_milk_rate.value }}" />
+          </div>
+          <div class="col-12 col-lg-4 mb-3">
+            <label for="buffalo_milk_rate" class="form-input">Buffalo</label>
+            <input type="text" name="buffalo_milk_rate" id="buffalo_milk_rate" class="form-control" value="{{ form.buffalo_milk_rate.value }}" />
+          </div>
+          <div class="col-12 col-lg-4 mb-3">
+            <label for="mix_milk_rate" class="form-input">Mix</label>
+            <input type="text" name="mix_milk_rate" id="mix_milk_rate" class="form-control" value="{{ form.mix_milk_rate.value }}" />
+          </div>
+          <div class="col-6 offset-6">
+            <button class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

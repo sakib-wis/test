@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <div class="body-wrapper-inner">
+    <div class="container-fluid">
+      <h4>Manage Rates</h4>
+      <a href="{% url 'superadmin:edit_rates' %}">Edit</a>
+      <div class="mt-5">
+        <h6>Cow Rate: {{ page_obj.cow_milk_rate }}</h6>
+        <h6>Buffalo Rate: {{ page_obj.buffalo_milk_rate }}</h6>
+        <h6>Mix Rate: {{ page_obj.mix_milk_rate }}</h6>
+      </div>
+    </div>
+  </div>
+{% endblock %}

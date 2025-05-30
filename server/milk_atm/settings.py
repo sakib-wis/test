@@ -127,9 +127,9 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 
 STATIC_URL = 'static/'
 if PRODUCTION:
-    STATIC_ROOT = BASE_DIR / 'staticfiles'
+    STATIC_ROOT = BASE_DIR / 'assets'
 else:
-    STATICFILES_DIRS = [BASE_DIR / 'static']
+    STATICFILES_DIRS = [BASE_DIR / 'assets']
 
 
 # Default primary key field type
