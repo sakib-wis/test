@@ -63,7 +63,7 @@ class MilkSale(BaseModel):
     payment_method = models.CharField(
         max_length=50, choices=Customer.PREFERRED_PAYMENT_METHOD, default='cash')
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
 
     class Meta:
         db_table = 'milk_sale'
