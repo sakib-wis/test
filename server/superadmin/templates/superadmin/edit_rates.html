@@ -3,23 +3,26 @@
 {% block content %}
   <div class="body-wrapper-inner">
     <div class="container-fluid">
-      <h4>Manage Rates</h4>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Edit Rates</h4>
+        <a href="{% url 'superadmin:manage_rates' %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left me-2"></i>Back</a>
+      </div>
       <form method="post">
         {% csrf_token %}
         <div class="row">
           <div class="col-12 col-lg-4 mb-3">
-            <label for="cow_milk_rate" class="form-input">Cow</label>
+            <label for="cow_milk_rate" class="form-label">Cow</label>
             <input type="text" name="cow_milk_rate" id="cow_milk_rate" class="form-control" value="{{ form.cow_milk_rate.value }}" />
           </div>
           <div class="col-12 col-lg-4 mb-3">
-            <label for="buffalo_milk_rate" class="form-input">Buffalo</label>
+            <label for="buffalo_milk_rate" class="form-label">Buffalo</label>
             <input type="text" name="buffalo_milk_rate" id="buffalo_milk_rate" class="form-control" value="{{ form.buffalo_milk_rate.value }}" />
           </div>
           <div class="col-12 col-lg-4 mb-3">
-            <label for="mix_milk_rate" class="form-input">Mix</label>
+            <label for="mix_milk_rate" class="form-label">Mix</label>
             <input type="text" name="mix_milk_rate" id="mix_milk_rate" class="form-control" value="{{ form.mix_milk_rate.value }}" />
           </div>
-          <div class="col-6 offset-6">
+          <div class="col-12 col-lg-1">
             <button class="btn btn-primary">Submit</button>
           </div>
         </div>

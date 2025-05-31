@@ -1,14 +1,35 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_tags %}
 {% block content %}
   <div class="body-wrapper-inner">
     <div class="container-fluid">
-      <h4>Manage Rates</h4>
-      <a href="{% url 'superadmin:edit_rates' %}">Edit</a>
-      <div class="mt-5">
-        <h6>Cow Rate: {{ page_obj.cow_milk_rate }}</h6>
-        <h6>Buffalo Rate: {{ page_obj.buffalo_milk_rate }}</h6>
-        <h6>Mix Rate: {{ page_obj.mix_milk_rate }}</h6>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Manage Rates</h4>
+        <div>
+          <a href="{% url 'superadmin:dashboard' %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left me-2"></i> Back</a>
+          <a class="btn btn-primary" href="{% url 'superadmin:edit_rates' %}"><i class="fa-solid fa-pencil me-"></i> Edit</a>
+        </div>
+      </div>
+      <div class="mt-5 d-flex flex-wrap gap-2">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Cow</h5>
+            <h6>{{ page_obj.cow_milk_rate|currency }}</h6>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Buffalo</h5>
+            <h6>{{ page_obj.buffalo_milk_rate|currency }}</h6>
+          </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Mix</h5>
+            <h6>{{ page_obj.mix_milk_rate|currency }}</h6>
+          </div>
+        </div>
       </div>
     </div>
   </div>

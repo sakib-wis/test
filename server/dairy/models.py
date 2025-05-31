@@ -1,22 +1,7 @@
 from django.db import models
 from .base_models import BaseModel
 from accounts.models import User
-
-
-class States(BaseModel):
-    value = models.CharField(max_length=200)
-
-    class Meta:
-        db_table = 'states'
-
-
-class Cities(BaseModel):
-    state = models.ForeignKey(
-        States, on_delete=models.CASCADE, related_name='cities', null=True)
-    value = models.CharField(max_length=200)
-
-    class Meta:
-        db_table = 'cities'
+from superadmin.models import States, Cities
 
 
 class Customer(BaseModel):

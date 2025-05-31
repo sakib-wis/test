@@ -21,10 +21,5 @@ def encrypt_secret_key(plain_text):
     return trans_str.strip('S')
 
 
-def encrypt_msg(plain_text):
-    ENCRYPTION_SECRECT_KEY = settings.ENCRYPTION_SECRECT_KEY
-    public_key = encrypt_secret_key(ENCRYPTION_SECRECT_KEY)
-    trans_str = ''
-    for word in str(plain_text):
-        trans_str += str(ord(word)+3)+'M'
-    return public_key+trans_str.strip('M')
+def encrypt_msg(value):
+    return 786786*int(value)

@@ -16489,7 +16489,7 @@ body {
   margin: 0 auto;
   padding: 24px;
   transition: 0.2s ease-in;
-  padding-top: 180px;
+  padding-top: 100px;
 }
 @media (max-width: 991.98px) {
   .body-wrapper .container-fluid,

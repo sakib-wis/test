@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from superadmin.models import States, Cities
 
 
 class CustomerSerializer(serializers.ModelSerializer):

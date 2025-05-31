@@ -32,7 +32,7 @@ $(function () {
   var elements = findMatchingElement();
 
   // Do something with the matching element
-  if(elements){
+  if (elements) {
     elements.classList.add("active");
   }
 

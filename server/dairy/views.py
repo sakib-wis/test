@@ -10,6 +10,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 from django.shortcuts import get_object_or_404
 from .models import *
+from superadmin.models import States, Cities
 from .serializers import *
 from django.utils.timezone import now, timedelta
 
