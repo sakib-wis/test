@@ -4,9 +4,10 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from 'react-router-dom'
 import { fetchAdminPanel, fetchCustomers, milkSold } from "../../services/api";
-import { milk_types_options, type AdminPanelInterface, type CustomerInterface } from "../../types";
+import { milk_types_options, type AdminPanelInterface, type CustomerInterface, type SaleMilkInterface } from "../../types";
 import { formatCurrency } from '../../utils/helpers'
 import Loader from "../../components/Loader";
+import { toast } from "react-toastify";
 
 export default function SaleMilk() {
     const navigate = useNavigate();
@@ -18,10 +19,11 @@ export default function SaleMilk() {
         buffalo_milk_rate: 0,
         mix_milk_rate: 0
     });
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<SaleMilkInterface>({
         customer: "1",
         milk_type: '1',
         quantity: "",
+        payment_method: 'cash',
         price: 0,
     })
     const [errors, setErrors] = useState<Record<string, string>>({})
@@ -103,13 +105,11 @@ export default function SaleMilk() {
         setIsSubmitting(true)
 
         try {
-            const res = await milkSold(formData)
-            console.log(">Sa", res)
-            // Simulate API call            
+            await milkSold(formData)
+            toast.success("Milk sold successfully!")
             navigate("/sales")
         } catch (error) {
-            console.error("Error adding customer:", error)
-            alert("Failed to add customer. Please try again.")
+            toast.error("Failed to sell milk. Please try again.")
         } finally {
             setIsSubmitting(false)
         }
@@ -188,6 +188,22 @@ export default function SaleMilk() {
                                                 required placeholder="Enter Value"
                                             />
                                             {errors.quantity && <div className="invalid-feedback">{errors.quantity}</div>}
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label htmlFor="payment_method" className="form-label">
+                                                Payment Method
+                                            </label>
+                                            <select className={`form-control ${errors.payment_method ? "is-invalid" : ""}`}
+                                                id="payment_method"
+                                                name="payment_method"
+                                                value={formData.payment_method}
+                                                onChange={handleChange}
+                                                required                                            >
+                                                <option value="cash">Cash</option>
+                                                <option value="online">Online</option>
+
+                                            </select>
+                                            {errors.payment_method && <div className="invalid-feedback">{errors.payment_method}</div>}
                                         </div>
                                         <div className="col-md-6 mb-3">
                                             <label htmlFor="price" className="form-label">

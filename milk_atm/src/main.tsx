@@ -8,9 +8,14 @@ import './fontawesome';
 import './assets/css/index.css';
 import 'datatables.net-responsive';
 import 'datatables.net-responsive-dt/css/responsive.dataTables.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <>
+      <App />
+      <ToastContainer />
+    </>
   </StrictMode>,
 )

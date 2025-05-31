@@ -13,8 +13,7 @@ class Customer(BaseModel):
     PREFERRED_PAYMENT_METHOD = [
         ('cash', 'Cash'),
         ('online', 'Online Payment'),
-        ('credit', 'Credit Card'),
-        ('upi', 'UPI')
+
     ]
     DELIVERY_SCHEDULE = [
         ('morning', 'Morning (6AM - 9AM)'),
@@ -59,10 +58,12 @@ class MilkSale(BaseModel):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='milk_sale', null=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    quantity = models.FloatField()
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
     milk_type = models.CharField(max_length=5, choices=MILK_TYPE, default='1')
+    payment_method = models.CharField(
+        max_length=50, choices=Customer.PREFERRED_PAYMENT_METHOD, default='cash')
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    date = models.DateField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'milk_sale'

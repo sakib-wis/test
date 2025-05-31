@@ -40,18 +40,48 @@ export const milk_types_options: MilkTypeInterface[] = [
     { id: 2, value: 'Buffalo' },
     { id: 3, value: 'Cow' },
 ]
-
+export type PaymentMethod = 'online' | 'cash' ;
+export const PaymentMethods: Record<PaymentMethod, string> = {
+    online: 'Online',
+    cash: 'Cash',
+    
+};
 export interface SaleInterface {
     id: number;
     customer: CustomerInterface;
     quantity: number;
     milk_type: number | string;
     price: number;
-    date: string;
+    payment_method: PaymentMethod;
+    timestamp: string;
+}
+export interface SaleMilkInterface {
+    customer: string;
+    quantity: string;
+    milk_type: number | string;
+    price: number;
+    payment_method: string;
 }
 export interface TotalInterface {
     total_price: number;
     total_quantity: number;
+}
+export interface dailySalesDataInterface {
+    time: string;
+    liters: number;
+}
+export interface monthlySalesDataInterface {
+    month: string;
+    liters: number;
+}
+export interface dailyPaymentDataInterface {
+    name: string;
+    value: number;
+}
+export interface monthlyPaymentDataInterface {
+    month: string;
+    online: number;
+    cash: number;
 }
 export interface dashboardInterface {
     today_totals: TotalInterface;
@@ -59,6 +89,11 @@ export interface dashboardInterface {
     monthly_totals: TotalInterface;
     yearly_totals: TotalInterface;
     total_customer: number;
+    online_percentage: number;
+    dailySalesData: dailySalesDataInterface[]
+    monthlySalesData: monthlySalesDataInterface[]
+    dailyPaymentData: dailyPaymentDataInterface[]
+    monthlyPaymentData: monthlyPaymentDataInterface[]
 }
 export interface StatesInterface {
     id: number;

@@ -3,9 +3,9 @@ import $ from 'jquery';
 import 'datatables.net';
 import { useNavigate } from 'react-router-dom';
 import { fetchSales } from '../services/api';
-import { milk_types_options, type SaleInterface, type TotalInterface } from '../types';
+import { milk_types_options, type SaleInterface, type TotalInterface, PaymentMethods } from '../types';
 import Loader from '../components/Loader';
-import { formatCurrency, getTodayDate } from '../utils/helpers';
+import { formatCurrency, getStartDateTime, getNowDateTime } from '../utils/helpers';
 
 
 const Sales: React.FC = () => {
@@ -18,8 +18,8 @@ const Sales: React.FC = () => {
     });
     const tableInitialized = useRef<boolean>(false); // prevent multiple initializations
     const [loading, setLoading] = useState<boolean>(true);
-    const [fromDate, setFromDate] = useState(getTodayDate());
-    const [toDate, setToDate] = useState(getTodayDate());
+    const [fromDate, setFromDate] = useState(getStartDateTime());
+    const [toDate, setToDate] = useState(getNowDateTime());
     // Fetch data on mount
     useEffect(() => {
         fetchFilteredSales()
@@ -91,7 +91,7 @@ const Sales: React.FC = () => {
                 <div className="col-md-3">
                     <label className="form-label">From Date</label>
                     <input
-                        type="date"
+                        type="datetime-local"
                         className="form-control"
                         value={fromDate}
                         onChange={(e) => setFromDate(e.target.value)}
@@ -100,7 +100,7 @@ const Sales: React.FC = () => {
                 <div className="col-md-3">
                     <label className="form-label">To Date</label>
                     <input
-                        type="date"
+                        type="datetime-local"
                         className="form-control"
                         value={toDate}
                         onChange={(e) => setToDate(e.target.value)}
@@ -115,6 +115,15 @@ const Sales: React.FC = () => {
                     </button>
                 </div>
             </div>
+            <div className="row">
+                <div className="card col-12 col-lg-4 mt-5">
+                    <div className="card-body">
+                        <h5 className="card-title">Total Sales</h5>
+                        <p className="card-text mb-0">Total Quantity: {total.total_quantity} Lt.</p>
+                        <p className="card-text">Total Price: {formatCurrency(total.total_price)}</p>
+                    </div>
+                </div>
+            </div>
 
             {
                 loading ? <Loader /> : <div className='table-wrapper mt-5'>
@@ -124,6 +133,7 @@ const Sales: React.FC = () => {
                                 <th className="border px-4 py-2">Customer</th>
                                 <th className="border px-4 py-2">Qty (L)</th>
                                 <th className="border px-4 py-2">Milk Type</th>
+                                <th className="border px-4 py-2">Payment Type</th>
                                 <th className="border px-4 py-2">Date</th>
                                 <th className="border px-4 py-2">Price</th>
                             </tr>
@@ -134,20 +144,12 @@ const Sales: React.FC = () => {
                                     <td className="border px-4 py-2">{s.customer.first_name} {s.customer.last_name}</td>
                                     <td className="border px-4 py-2">{s.quantity}</td>
                                     <td className="border px-4 py-2">{milk_types_options.find(ele => ele.id == s.milk_type)?.value}</td>
-                                    <td className="border px-4 py-2">{s.date}</td>
+                                    <td className="border px-4 py-2">{PaymentMethods[s.payment_method]}</td>
+                                    <td className="border px-4 py-2">{s.timestamp}</td>
                                     <td className="border px-4 py-2">{formatCurrency(s.price)}</td>
                                 </tr>
                             ))}
                         </tbody>
-                        <tfoot >
-                            <tr className="bg-dark text-white">
-                                <td className="border px-4 py-2">Total Sale</td>
-                                <td className="border px-4 py-2">{total.total_quantity} Lt.</td>
-                                <td className="border px-4 py-2"></td>
-                                <td className="border px-4 py-2"></td>
-                                <td className="border px-4 py-2">{formatCurrency(total.total_price)}</td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             }

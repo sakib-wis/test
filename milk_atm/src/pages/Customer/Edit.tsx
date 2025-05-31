@@ -6,6 +6,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { editCustomers, fetchCities, fetchCustomer, fetchStates } from "../../services/api"
 import Loader from "../../components/Loader";
 import type { CitiesInterface, StatesInterface } from "../../types";
+import { toast } from "react-toastify";
 
 export default function EditCustomerPage() {
     const { id } = useParams<{ id: string }>();
@@ -92,13 +93,11 @@ export default function EditCustomerPage() {
         }
         try {
             // Simulate API call
-            const res = await editCustomers(id, formData)
-            console.log("Repose", res)
-            // Redirect to customers list
+            await editCustomers(id, formData)
+            toast.success("Customer added successfully!")
             navigate("/customers")
         } catch (error) {
-            console.error("Error adding customer:", error)
-            alert("Failed to add customer. Please try again.")
+            toast.error("Failed to update customer. Please try again.")
         } finally {
             setIsSubmitting(false)
         }
@@ -114,6 +113,7 @@ export default function EditCustomerPage() {
                             Back to Customers
                         </Link>
                     </div>
+
                     <hr />
                 </div>
             </div>

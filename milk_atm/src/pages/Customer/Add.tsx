@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { createCustomers, fetchCities, fetchStates } from "../../services/api"
 import Loader from "../../components/Loader";
 import type { CitiesInterface, StatesInterface } from "../../types";
+import { toast } from "react-toastify";
 
 export default function AddCustomerPage() {
     const navigate = useNavigate();
@@ -82,13 +83,11 @@ export default function AddCustomerPage() {
 
         try {
             // Simulate API call
-            const res = await createCustomers(formData)
-            console.log("Repose", res)
-            // Redirect to customers list
+            await createCustomers(formData)
+            toast.success("Customer added successfully!")
             navigate("/customers")
         } catch (error) {
-            console.error("Error adding customer:", error)
-            alert("Failed to add customer. Please try again.")
+            toast.error("Failed to add customer. Please try again.")
         } finally {
             setIsSubmitting(false)
         }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    PieChart,
     Calendar,
     Droplets,
     TrendingUp,
@@ -16,6 +15,7 @@ import {
     CartesianGrid,
     Cell,
     Legend,
+    PieChart,
     Pie,
     ResponsiveContainer,
     Tooltip,
@@ -26,54 +26,11 @@ import { Link } from "react-router-dom";
 import { fetchDashboard } from "../services/api";
 import type { dashboardInterface } from "../types";
 
-const dailySalesData = [
-    { time: "6AM", liters: 120 },
-    { time: "9AM", liters: 240 },
-    { time: "12PM", liters: 180 },
-    { time: "3PM", liters: 300 },
-    { time: "6PM", liters: 220 },
-    { time: "9PM", liters: 100 },
-]
 
-const monthlySalesData = [
-    { month: "Jan", liters: 3200 },
-    { month: "Feb", liters: 2800 },
-    { month: "Mar", liters: 3500 },
-    { month: "Apr", liters: 3800 },
-    { month: "May", liters: 4200 },
-    { month: "Jun", liters: 3900 },
-    { month: "Jul", liters: 4100 },
-    { month: "Aug", liters: 4500 },
-    { month: "Sep", liters: 4300 },
-    { month: "Oct", liters: 4000 },
-    { month: "Nov", liters: 3700 },
-    { month: "Dec", liters: 3900 },
-]
-
-const dailyPaymentData = [
-    { name: "Online", value: 65 },
-    { name: "Cash", value: 35 },
-]
-
-const monthlyPaymentData = [
-    { month: "Jan", online: 1800, cash: 1400 },
-    { month: "Feb", online: 1600, cash: 1200 },
-    { month: "Mar", online: 2100, cash: 1400 },
-    { month: "Apr", online: 2400, cash: 1400 },
-    { month: "May", online: 2700, cash: 1500 },
-    { month: "Jun", online: 2500, cash: 1400 },
-    { month: "Jul", online: 2800, cash: 1300 },
-    { month: "Aug", online: 3000, cash: 1500 },
-    { month: "Sep", online: 2900, cash: 1400 },
-    { month: "Oct", online: 2600, cash: 1400 },
-    { month: "Nov", online: 2300, cash: 1400 },
-    { month: "Dec", online: 2500, cash: 1400 },
-]
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
 
 const Dashboard: React.FC = () => {
-    const [selectedPeriod, setSelectedPeriod] = useState("today")
     const [dashboard, setDashboard] = useState<dashboardInterface>({
         today_totals: {
             total_price: 0,
@@ -91,9 +48,13 @@ const Dashboard: React.FC = () => {
             total_price: 0,
             total_quantity: 0
         },
-        total_customer: 0
+        total_customer: 0,
+        online_percentage: 0,
+        dailySalesData: [],
+        monthlySalesData: [],
+        dailyPaymentData: [],
+        monthlyPaymentData: []
     })
-    const totalOnlinePaymentToday = dailyPaymentData[0].value
     useEffect(() => {
         fetchDashboard().then(res => {
             setDashboard(res)
@@ -118,28 +79,28 @@ const Dashboard: React.FC = () => {
                         icon: <Droplets className="text-primary" size={24} />,
                         bg: "primary",
                         label: "Today's Sales",
-                        value: `${dashboard.today_totals.total_quantity} L`,
+                        value: `${dashboard.today_totals.total_quantity || 0} L`,
                         change: "+12.5%",
                     },
                     {
                         icon: <Calendar className="text-success" size={24} />,
                         bg: "success",
                         label: "Monthly Sales",
-                        value: `${dashboard.monthly_totals.total_quantity} L`,
+                        value: `${dashboard.monthly_totals.total_quantity || 0} L`,
                         change: "+8.3%",
                     },
                     {
                         icon: <CreditCard className="text-info" size={24} />,
                         bg: "info",
                         label: "Online Payments",
-                        value: `${totalOnlinePaymentToday}%`,
+                        value: `${dashboard.online_percentage}%`,
                         change: "+5.2%",
                     },
                     {
                         icon: <Users className="text-warning" size={24} />,
                         bg: "warning",
                         label: "Active Customers",
-                        value: `${dashboard.total_customer}`,
+                        value: `${dashboard.total_customer || 0}`,
                         change: "+3.1%",
                     },
                 ].map((card, i) => (
@@ -165,34 +126,6 @@ const Dashboard: React.FC = () => {
                     </div>
                 ))}
             </div>
-            {/* Period Selector */}
-            <div className="row mb-4">
-                <div className="col-12">
-                    <div className="card border-0 shadow-sm">
-                        <div className="card-body">
-                            <div className="btn-group" role="group">
-                                {["today", "week", "month", "year"].map((period) => (
-                                    <button
-                                        key={period}
-                                        type="button"
-                                        className={`btn ${selectedPeriod === period ? "btn-primary" : "btn-outline-primary"
-                                            }`}
-                                        onClick={() => setSelectedPeriod(period)}
-                                    >
-                                        {period === "today"
-                                            ? "Today"
-                                            : period === "week"
-                                                ? "This Week"
-                                                : period === "month"
-                                                    ? "This Month"
-                                                    : "This Year"}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             {/* Charts */}
             <div className="row g-4 mb-4">
                 {/* Daily Sales Area Chart */}
@@ -204,7 +137,7 @@ const Dashboard: React.FC = () => {
                         <div className="card-body">
                             <div style={{ width: "100%", height: 300 }}>
                                 <ResponsiveContainer>
-                                    <AreaChart data={dailySalesData}>
+                                    <AreaChart data={dashboard.dailySalesData || []}>
                                         <defs>
                                             <linearGradient id="colorLiters" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="5%" stopColor="#0d6efd" stopOpacity={0.8} />
@@ -237,7 +170,7 @@ const Dashboard: React.FC = () => {
                         <div className="card-body">
                             <div style={{ width: "100%", height: 300 }}>
                                 <ResponsiveContainer>
-                                    <BarChart data={monthlySalesData}>
+                                    <BarChart data={dashboard.monthlySalesData}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis dataKey="month" />
                                         <YAxis />
@@ -263,7 +196,7 @@ const Dashboard: React.FC = () => {
                                 <ResponsiveContainer>
                                     <PieChart>
                                         <Pie
-                                            data={dailyPaymentData}
+                                            data={dashboard.dailyPaymentData}
                                             cx="50%"
                                             cy="50%"
                                             outerRadius={100}
@@ -274,7 +207,7 @@ const Dashboard: React.FC = () => {
                                                 `${name}: ${(percent * 100).toFixed(0)}%`
                                             }
                                         >
-                                            {dailyPaymentData.map((entry, index) => (
+                                            {dashboard.dailyPaymentData.map((entry, index) => (
                                                 <Cell
                                                     key={`cell-${index}-${entry.name}`}
                                                     fill={COLORS[index % COLORS.length]}
@@ -299,7 +232,7 @@ const Dashboard: React.FC = () => {
                         <div className="card-body">
                             <div style={{ width: "100%", height: 300 }}>
                                 <ResponsiveContainer>
-                                    <BarChart data={monthlyPaymentData}>
+                                    <BarChart data={dashboard.monthlyPaymentData}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis dataKey="month" />
                                         <YAxis />

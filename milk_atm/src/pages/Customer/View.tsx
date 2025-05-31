@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { fetchCustomer } from "../../services/api";
 import type { CustomerInterface } from "../../types";
 import Loader from "../../components/Loader";
+import { Link } from "react-router-dom";
 
 
 
@@ -28,12 +29,24 @@ const CustomerView: React.FC = () => {
     if (error || !customer) return <div>{error || "Customer not found."}</div>;
 
     return (
-        <div>
-            <h2>Customer Details</h2>
-            <p><strong>ID:</strong> {customer.enc_id}</p>
-            <p><strong>Name:</strong> {customer.first_name} {customer.last_name}</p>
-            <p><strong>Phone:</strong> {customer.phone_number}</p>
-            {customer.address && <p><strong>Address:</strong> {customer.address}</p>}
+        <div className="container py-4">
+            <div className="row mb-4">
+                <div className="col-12">
+                    <div className="d-flex justify-content-between align-items-center">
+                        <h1 className="h3 mb-0">Edit Customer</h1>
+                        <Link to="/customers" className="btn btn-outline-secondary">
+                            Back to Customers
+                        </Link>
+                    </div>
+                    <hr />
+                </div>
+            </div>
+            <div>
+                <p><strong>ID:</strong> {customer.enc_id}</p>
+                <p><strong>Name:</strong> {customer.first_name} {customer.last_name}</p>
+                <p><strong>Phone:</strong> {customer.phone_number}</p>
+                {customer.address && <p><strong>Address:</strong> {customer.address}</p>}
+            </div>
         </div>
     );
 };
