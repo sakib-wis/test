@@ -40,14 +40,15 @@ export const milk_types_options: MilkTypeInterface[] = [
     { id: 2, value: 'Buffalo' },
     { id: 3, value: 'Cow' },
 ]
-export type PaymentMethod = 'online' | 'cash' ;
+export type PaymentMethod = 'online' | 'cash';
 export const PaymentMethods: Record<PaymentMethod, string> = {
     online: 'Online',
     cash: 'Cash',
-    
+
 };
 export interface SaleInterface {
     id: number;
+    enc_id: string;
     customer: CustomerInterface;
     quantity: number;
     milk_type: number | string;

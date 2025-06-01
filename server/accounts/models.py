@@ -22,7 +22,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     phone_number = models.CharField(max_length=15, unique=True)
     full_name = models.CharField(max_length=30, blank=True)
     is_active = models.BooleanField(default=True)

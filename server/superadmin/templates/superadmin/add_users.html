@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <div class="body-wrapper-inner">
+    <div class="container-fluid">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Manage User/Staff</h4>
+        <a href="{% url 'superadmin:manage_users' %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left me-2"></i>Back</a>
+      </div>
+      <div class="mt-5">
+        <form method="post">
+          {% csrf_token %}
+          <div class="row">
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <div class="col-12 col-lg-6 mb-3">
+              <label for="phone_number" class="form-label">Phone Number</label>
+              <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ form.phone_number.value|default_if_none:'' }}" />
+              {% for error in form.phone_number.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-lg-6 mb-3">
+              <label for="full_name" class="form-label">Full Name</label>
+              <input type="text" name="full_name" id="full_name" class="form-control" value="{{ form.full_name.value|default_if_none:'' }}" />
+              {% for error in form.full_name.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-lg-6 mb-3 position-relative">
+              <label for="password1" class="form-label">Password</label>
+              <div class="input-group">
+                <input type="password" name="password1" id="password1" class="form-control" value="{{ form.password1.value|default_if_none:'' }}" />
+                <span class="input-group-text" onclick="togglePassword('password1', this)" style="cursor: pointer;"><i class="fa fa-eye" id="toggle-password1-icon"></i></span>
+              </div>
+              {% for error in form.password1.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-lg-6 mb-3 position-relative">
+              <label for="password2" class="form-label">Confirm Password</label>
+              <div class="input-group">
+                <input type="password" name="password2" id="password2" class="form-control" value="{{ form.password2.value|default_if_none:'' }}" />
+                <span class="input-group-text" onclick="togglePassword('password2', this)" style="cursor: pointer;"><i class="fa fa-eye" id="toggle-password2-icon"></i></span>
+              </div>
+              {% for error in form.password2.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-12 col-lg-1">
+              <button class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

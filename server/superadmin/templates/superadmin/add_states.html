@@ -11,9 +11,15 @@
         <form method="post">
           {% csrf_token %}
           <div class="row">
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
             <div class="col-12 col-lg-12 mb-3">
               <label for="value" class="form-label">State Name</label>
               <input type="text" name="value" id="value" class="form-control" value="{{ form.value.value|default_if_none:'' }}" />
+              {% for error in form.value.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
             </div>
             <div class="col-12 col-lg-1">
               <button class="btn btn-primary">Submit</button>

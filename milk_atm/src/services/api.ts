@@ -46,6 +46,10 @@ export const fetchCustomer = async (enc_id: any) => {
   const response = await api.get("/dairy/customers/" + enc_id); // example
   return response.data;
 };
+export const fetchSale = async (enc_id: any) => {
+  const response = await api.get("/dairy/milk-sales/" + enc_id); // example
+  return response.data;
+};
 export const createCustomers = async (payload: any) => {
   const response = await api.post("/dairy/add_customer/", payload); // example
   return response.data;
@@ -63,6 +67,12 @@ export const deleteCustomers = async (enc_id: string) => {
   ); // example
   return response.data;
 };
+export const deleteSales = async (enc_id: string) => {
+  const response = await api.delete(
+    "/dairy/customers/" + enc_id + "/"
+  ); // example
+  return response.data;
+};
 export const fetchStates = async () => {
   const response = await api.get("/dairy/states/"); // example
   return response.data;
@@ -72,11 +82,15 @@ export const fetchCities = async () => {
   return response.data;
 };
 export const fetchSales = async (payload: any) => {
-  const response = await api.post("/dairy/milk-sales/", payload); // example
+  const response = await api.post("/dairy/get-milk-sales/", payload); // example
   return response.data;
 };
 export const milkSold = async (payload: any) => {
-  const response = await api.post("/dairy/milk-sale/", payload); // example
+  const response = await api.post("/dairy/milk-sales/", payload); // example
+  return response.data;
+};
+export const editSale = async (enc_id: string, payload: any) => {
+  const response = await api.patch("/dairy/milk-sales/" + enc_id + "/", payload); // example
   return response.data;
 };
 

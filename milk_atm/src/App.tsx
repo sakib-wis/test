@@ -12,6 +12,7 @@ import AddCustomerPage from './pages/Customer/Add';
 import CustomerView from './pages/Customer/View';
 import SaleMilk from './pages/Sales/Sale';
 import EditCustomerPage from './pages/Customer/Edit';
+import EditSalesPage from './pages/Sales/Edit';
 
 const App: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const App: React.FC = () => {
             <Route path="/customers/:id" element={<ProtectedWrapper><CustomerView /></ProtectedWrapper>} />
             <Route path="/customers/edit/:id" element={<ProtectedWrapper><EditCustomerPage /></ProtectedWrapper>} />
             <Route path="/sales" element={<ProtectedWrapper > <Sales /> </ProtectedWrapper>} />
+            <Route path="/sales/edit/:id" element={<ProtectedWrapper > <EditSalesPage /> </ProtectedWrapper>} />
             <Route path="/sales/sale" element={<ProtectedWrapper > <SaleMilk /> </ProtectedWrapper>} />
           </Routes>
         </Layout>

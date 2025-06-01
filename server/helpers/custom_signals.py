@@ -6,6 +6,7 @@ from helpers import helpers
 # Generate encrypt id and save in model
 # List of your project-specific app names
 project_apps = [
+    'accounts',
     'dairy',
     'superadmin',
 ]

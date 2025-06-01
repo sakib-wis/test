@@ -54,34 +54,7 @@
           {% endfor %}
       {% endif %}
     </script>
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const deleteButtons = document.querySelectorAll(".delete-btn");
-
-  deleteButtons.forEach(button => {
-    button.addEventListener("click", function (e) {
-      e.preventDefault(); // prevent immediate navigation
-
-      const url = this.getAttribute("href");
-      const name = this.getAttribute("data-name") || "this item";
-
-      Swal.fire({
-        title: `Are you sure?`,
-        text: `You are about to delete "${name}". This action cannot be undone!`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Yes, delete it!"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = url; // Proceed with the delete
-        }
-      });
-    });
-  });
-});
-</script>
+    <script src="{% static 'js/script.js' %}"></script>
     {% block script %}
 
     {% endblock %}

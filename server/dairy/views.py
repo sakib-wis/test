@@ -261,3 +261,26 @@ class AllMilkSalesView(APIView):
             'data': serializer.data
         }
         return Response(context, status=status.HTTP_200_OK)
+
+
+class MilkSaleDetailView(APIView):
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, enc_id):
+        customer = get_object_or_404(MilkSale, enc_id=enc_id)
+        serializer = MilkSaleSerializer(customer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, enc_id):
+        customer = get_object_or_404(MilkSale, enc_id=enc_id)
+        serializer = MilkSaleSerializer(
+            data=request.data, instance=customer)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, enc_id):
+        MilkSale.objects.filter(enc_id=enc_id).update(end_date=datetime.now())
+        return Response({'res': "Milk Sale Deleted"}, status=status.HTTP_201_CREATED)

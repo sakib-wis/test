@@ -10,17 +10,29 @@
       <form method="post">
         {% csrf_token %}
         <div class="row">
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
           <div class="col-12 col-lg-4 mb-3">
             <label for="cow_milk_rate" class="form-label">Cow</label>
             <input type="text" name="cow_milk_rate" id="cow_milk_rate" class="form-control" value="{{ form.cow_milk_rate.value }}" />
+            {% for error in form.cow_milk_rate.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
           </div>
           <div class="col-12 col-lg-4 mb-3">
             <label for="buffalo_milk_rate" class="form-label">Buffalo</label>
             <input type="text" name="buffalo_milk_rate" id="buffalo_milk_rate" class="form-control" value="{{ form.buffalo_milk_rate.value }}" />
+            {% for error in form.buffalo_milk_rate.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
           </div>
           <div class="col-12 col-lg-4 mb-3">
             <label for="mix_milk_rate" class="form-label">Mix</label>
             <input type="text" name="mix_milk_rate" id="mix_milk_rate" class="form-control" value="{{ form.mix_milk_rate.value }}" />
+            {% for error in form.mix_milk_rate.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
           </div>
           <div class="col-12 col-lg-1">
             <button class="btn btn-primary">Submit</button>

@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import $ from 'jquery';
 import 'datatables.net';
 import { useNavigate } from 'react-router-dom';
-import { fetchSales } from '../services/api';
+import { deleteSales, fetchSales } from '../services/api';
 import { milk_types_options, type SaleInterface, type TotalInterface, PaymentMethods } from '../types';
 import Loader from '../components/Loader';
 import { formatCurrency, getStartDateTime, getNowDateTime } from '../utils/helpers';
-
+import moment from 'moment';
 
 const Sales: React.FC = () => {
     const navigate = useNavigate();
@@ -58,7 +58,6 @@ const Sales: React.FC = () => {
             setTimeout(() => {
                 if (tableRef.current && !tableInitialized.current) {
                     $(tableRef.current).DataTable({
-                        responsive: true,
                         autoWidth: false,
                         order: [[0, 'asc']]
                     });
@@ -136,6 +135,7 @@ const Sales: React.FC = () => {
                                 <th className="border px-4 py-2">Payment Type</th>
                                 <th className="border px-4 py-2">Date</th>
                                 <th className="border px-4 py-2">Price</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -145,8 +145,18 @@ const Sales: React.FC = () => {
                                     <td className="border px-4 py-2">{s.quantity}</td>
                                     <td className="border px-4 py-2">{milk_types_options.find(ele => ele.id == s.milk_type)?.value}</td>
                                     <td className="border px-4 py-2">{PaymentMethods[s.payment_method]}</td>
-                                    <td className="border px-4 py-2">{s.timestamp}</td>
+                                    <td className="border px-4 py-2">{moment(s.timestamp).format('YYYY-MM-DD hh:mm A')}</td>
                                     <td className="border px-4 py-2">{formatCurrency(s.price)}</td>
+                                    <td>
+                                        <div className="btn-group btn-group-sm">
+                                            <button className="btn btn-outline-secondary" onClick={() => navigate('/sales/edit/' + s.enc_id)}>
+                                                Edit
+                                            </button>
+                                            <button className="btn btn-outline-danger" onClick={() => deleteSales(s.enc_id)}>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

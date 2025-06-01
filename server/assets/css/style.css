@@ -8,3 +8,12 @@
   padding: 14px 16px;
   color: #000;
 }
+
+.password-icon {
+  cursor: pointer;
+  position: absolute;
+  right: 9px;
+  top: 34px;
+  background: none;
+
+}
