@@ -4,15 +4,15 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from 'react-router-dom'
 import { fetchAdminPanel, fetchCustomers, milkSold } from "../../services/api";
-import { milk_types_options, type AdminPanelInterface, type CustomerInterface, type SaleMilkInterface } from "../../types";
+import { milk_types_options, type AdminPanelInterface, type CustomerInterface, type SaleMilkInterface, type CustomerOption } from "../../types";
 import { formatCurrency } from '../../utils/helpers'
 import Loader from "../../components/Loader";
 import { toast } from "react-toastify";
-
+import Select, { type SingleValue } from 'react-select'
 export default function SaleMilk() {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [customers, setCustomers] = useState<CustomerInterface[]>([]);
+    const [customers, setCustomers] = useState<CustomerOption[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [adminPanel, setAdminPanel] = useState<AdminPanelInterface>({
         cow_milk_rate: 0,
@@ -20,8 +20,8 @@ export default function SaleMilk() {
         mix_milk_rate: 0
     });
     const [formData, setFormData] = useState<SaleMilkInterface>({
-        customer: "1",
-        milk_type: '1',
+        customer: "",
+        milk_type: '',
         quantity: "",
         payment_method: 'cash',
         price: 0,
@@ -30,12 +30,19 @@ export default function SaleMilk() {
 
     useEffect(() => {
         fetchCustomers().then(res => {
-            setCustomers(res);
+            setCustomers(res.map((customer: CustomerInterface) => ({ label: `${customer.first_name} ${customer.last_name}`, value: customer.id })));
+            if (res[0]?.id) {
+                setFormData((prev) => ({ ...prev, customer: res[0].id.toString() }));
+            }
         }).finally(() => {
             setLoading(false);
         })
         fetchAdminPanel().then(res => {
             setAdminPanel(res);
+            const defaultMilkType = milk_types_options[0];
+            if (defaultMilkType) {
+                setFormData((prev) => ({ ...prev, milk_type: defaultMilkType.id.toString() }));
+            }
         }).finally(() => {
             setLoading(false);
         })
@@ -46,7 +53,6 @@ export default function SaleMilk() {
             setFormData((prev) => ({ ...prev, price: 0 }));
             return;
         }
-        console.log("Quantity:", quantity, "Milk Type:", formData.milk_type);
         let rate: number = 0;
         switch (formData.milk_type) {
             case '1':
@@ -87,9 +93,20 @@ export default function SaleMilk() {
             })
         }
     }
+    const handleSelectChange = (
+        selectedOption: SingleValue<{ label: string; value: string }>
+    ) => {
+        if (selectedOption) {
+            setFormData((prev) => ({
+                ...prev,
+                customer: selectedOption.value,
+            }));
+        }
+    };
+
     const validateForm = () => {
         const newErrors: Record<string, string> = {}
-        if (!formData.customer.trim()) newErrors.customer = "Customer is required"
+        if (!formData.customer) newErrors.customer = "Customer is required"
         if (!formData.milk_type) newErrors.price = "Milk Type is required"
         if (!formData.quantity) newErrors.quantity = "Quantity is required"
 
@@ -99,7 +116,6 @@ export default function SaleMilk() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log("Form Data:", formData, validateForm())
         if (!validateForm()) return
 
         setIsSubmitting(true)
@@ -114,7 +130,6 @@ export default function SaleMilk() {
             setIsSubmitting(false)
         }
     }
-
     return (
         <div className="container py-4">
             <div className="row mb-4">
@@ -148,7 +163,13 @@ export default function SaleMilk() {
                                             <label htmlFor="customer" className="form-label">
                                                 Customer *
                                             </label>
-                                            <select
+                                            <Select options={customers} className={`${errors.customer ? "is-invalid" : ""}`}
+                                                id="customer"
+                                                name="customer"
+                                                value={customers.find((c) => c.value === formData.customer) || null}
+                                                onChange={handleSelectChange}
+                                                required />
+                                            {/* <select
                                                 className={`form-control ${errors.customer ? "is-invalid" : ""}`}
                                                 id="customer"
                                                 name="customer"
@@ -156,7 +177,7 @@ export default function SaleMilk() {
                                                 onChange={handleChange}
                                                 required>
                                                 {customers && customers.map(customer => <option key={customer.id} value={customer.id}>{customer.first_name} {customer.last_name}</option>)}
-                                            </select>
+                                            </select> */}
                                             {errors.customer && <div className="invalid-feedback">{errors.customer}</div>}
                                         </div>
                                         <div className="col-md-6 mb-3">

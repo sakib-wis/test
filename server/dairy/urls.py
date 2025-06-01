@@ -10,8 +10,8 @@ urlpatterns = [
     path('customers/<str:enc_id>/',
          CustomerDetailView.as_view(), name='customer_detail'),
     path('add_customer/', AddCustomer.as_view(), name='add_customer'),
-    path('milk-sales/', MilkSaleCreateView.as_view(), name='milk_sales'),
     path('get-milk-sales/', AllMilkSalesView.as_view(), name='all_milk_sales'),
+    path('milk-sales/', MilkSaleCreateView.as_view(), name='milk_sales'),
     path('milk-sales/<str:enc_id>/',
          MilkSaleDetailView.as_view(), name='milk_sales_edit'),
 ]

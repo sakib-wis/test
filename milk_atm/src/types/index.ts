@@ -10,6 +10,10 @@ export interface AuthContextType {
     login: (token: string, user: User) => void;
     logout: () => void;
 }
+export interface CustomerOption {
+    label: string;
+    value: string;
+}
 export interface CustomerInterface {
     id: number;
     enc_id: string;
@@ -24,6 +28,8 @@ export interface CustomerInterface {
     additional_notes: string | null;
     city: number | null;
     state: number | null;
+    label: string | null;
+    value: string | null;
 }
 export interface AdminPanelInterface {
     cow_milk_rate: number;
